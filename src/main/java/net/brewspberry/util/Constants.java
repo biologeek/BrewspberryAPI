@@ -27,11 +27,11 @@ public abstract class Constants {
 	public static String ACT_ENGINE = "engine";
 	
 	//	public static String PROJECT_ROOT_PATH = "/home/pi";
-	public static String PROJECT_ROOT_PATH = "/home/xavier";
-	public static String BREW_VIEWER = "BrewViewer";
-	public static String BREW_API = "BrewspberryAPI";
+	public static String PROJECT_ROOT_PATH = "/opt/tomcat/webapps";
+	public static String BREW_VIEWER = "brewspberry-viewer";
+	public static String BREW_API = "brewspberry-core";
 	public static String BREW_BATCHES = "BrewspberryPi-Batches";
-	public static String BREW_TEMP = "TemperatureDisplay";
+	public static String BREW_TEMP = "brewspberry-api";
 	
 	public static String DEVICES_PROPERTIES = PROJECT_ROOT_PATH+"/"+BREW_VIEWER+"/WEB-INF/classes/devices.properties";
 	

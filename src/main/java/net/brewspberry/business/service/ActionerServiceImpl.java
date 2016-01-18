@@ -16,6 +16,7 @@ import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 
+import net.brewspberry.adapter.RelayAdapter;
 import net.brewspberry.business.IGenericDao;
 import net.brewspberry.business.IGenericService;
 import net.brewspberry.business.ISpecificActionerDao;
@@ -31,7 +32,8 @@ import net.brewspberry.util.ConfigLoader;
 import net.brewspberry.util.Constants;
 import net.brewspberry.util.LogManager;
 
-public class ActionerServiceImpl implements IGenericService<Actioner>, ISpecificActionerService
+public class ActionerServiceImpl implements IGenericService<Actioner>,
+ISpecificActionerService
 		 {
 
 	public static final Logger logger = LogManager.getInstance(ActionerServiceImpl.class.toString());
@@ -46,6 +48,7 @@ public class ActionerServiceImpl implements IGenericService<Actioner>, ISpecific
 	String getTemperatureRunningGrep = "ps -ef | grep bchrectemp.py";
 
 	final GpioController gpioController = GpioFactory.getInstance();
+	RelayAdapter relayAdapter = RelayAdapter.getInstance();
 
 	public ActionerServiceImpl() {
 		super();
@@ -307,19 +310,17 @@ public class ActionerServiceImpl implements IGenericService<Actioner>, ISpecific
 				logger.info("Provisionning pin " + actioner.getAct_raspi_pin()
 						+ " "
 						+ Constants.BREW_GPIO.get(actioner.getAct_raspi_pin()));
-				GpioPinDigitalOutput relay = gpioController
-						.provisionDigitalOutputPin(Constants.BREW_GPIO
-								.get(actioner.getAct_raspi_pin()));
-
-				relay.setState(PinState.HIGH);
-
+				relayAdapter.changePinState(Constants.BREW_GPIO
+								.get(actioner.getAct_raspi_pin()),PinState.HIGH);
 				actioner.setAct_status(Constants.ACT_RUNNING);
 				actioner.setAct_date_debut(new Date());
-				if (relay.getState() != PinState.HIGH) {
+				
+				
+				if (relayAdapter.getStateAsString(Constants.BREW_GPIO
+						.get(actioner.getAct_raspi_pin())) != "HIGH") {
 
 					throw new Exception(
 							"PinState not high, State change failed !");
-
 				}
 
 				break;
