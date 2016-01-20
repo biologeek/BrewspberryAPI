@@ -48,6 +48,18 @@ public class Etape implements Serializable{
     @OneToMany(fetch=FetchType.LAZY, mappedBy="act_etape")
     private List<Actioner> etp_actioner;
     
+
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="malt_etape")
+    private List<Malt> etp_malts;
+    
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="hbl_etape")
+    private List<Houblon> etp_houblons;
+    
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="lev_etape")
+    private List<Levure> etp_levures;
+    
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="etp_brassin")
+    List<Etape> bra_etapes;
     
     
 	public Etape() {

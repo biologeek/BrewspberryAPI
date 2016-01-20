@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -38,9 +39,6 @@ public abstract class Ingredient implements Serializable {
     private String ing_fournisseur;
     private Double ing_quantite;
     private Double ing_prix;
-    
-    @OneToOne(fetch=FetchType.LAZY, mappedBy="etp_ing_ajoute")
-    private Etape etapes;
     
     
     
@@ -83,12 +81,6 @@ public abstract class Ingredient implements Serializable {
 	}
 	public void setIng_disc(String ing_disc) {
 		this.ing_desc = ing_disc;
-	}
-	public Etape getEtapes() {
-		return etapes;
-	}
-	public void setEtapes(Etape etapes) {
-		this.etapes = etapes;
 	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;

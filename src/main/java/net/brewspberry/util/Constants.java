@@ -20,6 +20,7 @@ public abstract class Constants {
 	public static int ACT_RUNNING = 10;
 	public static int ACT_PAUSED = 5;
 	public static int ACT_STOPPED = 1;
+	public static int ACT_FAILED = 999;
 
 	
 	public static String ACT_DS18B20 = "ds18b20";

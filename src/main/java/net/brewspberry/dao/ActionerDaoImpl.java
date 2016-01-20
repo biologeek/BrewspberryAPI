@@ -28,10 +28,15 @@ public class ActionerDaoImpl implements IGenericDao<Actioner>, ISpecificActioner
 		try {
 			logger.info("Saving Actioner whith uuid "+arg0.getAct_uuid());
 			actID = (Long) session.save(arg0);
+			
+			tx.commit();
 			if (arg0.getAct_id() == 0 && actID != 0){
 				arg0.setAct_id(actID);
 			}
-			tx.commit();
+			else {
+				
+				logger.severe("Oh, I think we got a problem here : act_id = "+actID);
+			}
 		}
 		catch (HibernateException e){
 			tx.rollback();

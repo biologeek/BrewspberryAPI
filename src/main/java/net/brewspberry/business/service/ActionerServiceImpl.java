@@ -33,10 +33,10 @@ import net.brewspberry.util.Constants;
 import net.brewspberry.util.LogManager;
 
 public class ActionerServiceImpl implements IGenericService<Actioner>,
-ISpecificActionerService
-		 {
+		ISpecificActionerService {
 
-	public static final Logger logger = LogManager.getInstance(ActionerServiceImpl.class.toString());
+	public static final Logger logger = LogManager
+			.getInstance(ActionerServiceImpl.class.toString());
 
 	String commandLineRegexp = "/home/pi/batches/bchrectemp.py [0-9]{0,5} [0-9]{0,5}";
 
@@ -282,14 +282,15 @@ ISpecificActionerService
 					try {
 
 						// Starts python job and saves action in DB
-						actioner = this.startActionInDatabase(actioner);
 
 						Runtime.getRuntime().exec(
 								"/usr/bin/python " + f.getAbsolutePath() + " "
 										+ actioner.getAct_brassin().getBra_id()
 										+ " "
 										+ actioner.getAct_etape().getEtp_id()
-										+ " " + actioner.getAct_id());
+										+ " " + actioner.getAct_id() + " &");
+						
+						actioner = this.startActionInDatabase(actioner);
 
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
@@ -305,17 +306,41 @@ ISpecificActionerService
 			case "2":
 
 				// Relay
-				logger.info("It's an relay :");
+				logger.info("It's a relay !");
 
-				logger.info("Provisionning pin " + actioner.getAct_raspi_pin()
-						+ " "
-						+ Constants.BREW_GPIO.get(actioner.getAct_raspi_pin()));
-				relayAdapter.changePinState(Constants.BREW_GPIO
-								.get(actioner.getAct_raspi_pin()),PinState.HIGH);
-				actioner.setAct_status(Constants.ACT_RUNNING);
-				actioner.setAct_date_debut(new Date());
-				
-				
+				if (actioner.getAct_raspi_pin() != "") {
+
+					logger.info("Provisionning pin "
+							+ actioner.getAct_raspi_pin()
+							+ " "
+							+ Constants.BREW_GPIO.get(actioner
+									.getAct_raspi_pin()));
+					try {
+						
+						// Turning ON or OFF the pin
+						relayAdapter.changePinState(Constants.BREW_GPIO
+								.get(actioner.getAct_raspi_pin()),
+								PinState.HIGH);
+						
+						actioner.setAct_status(Constants.ACT_RUNNING);
+						logger.fine("Actioner at pin "+ actioner.getAct_raspi_pin()+" changed state to "+actioner.getAct_status());
+
+					} catch (Exception e) {
+
+						logger.severe("Couldn't change Pin state..."
+								+ actioner.getAct_raspi_pin()
+								+ ", setting status to FAILED !");
+						actioner.setAct_status(Constants.ACT_FAILED);
+
+
+					}
+					actioner = this.startActionInDatabase(actioner);
+
+					
+				} else {
+					throw new Exception("Empty Pin !!");
+				}
+
 				if (relayAdapter.getStateAsString(Constants.BREW_GPIO
 						.get(actioner.getAct_raspi_pin())) != "HIGH") {
 
@@ -338,18 +363,17 @@ ISpecificActionerService
 	 * 
 	 * It stops configured devices. for the moment : - relays (type 2) - ds18b20
 	 * temperature sensors (type 1). For these ones in fact it stops the job
-	 * collecting temperatures)
+	 * collecting temperatures.
 	 * 
 	 * @param Actioner
 	 *            that has to be stopped. Actioner must have ID
 	 * @return
-	 * @throws NotAppropriateStatusException
+	 * @throws Exception
 	 * 
 	 */
 	@Override
-	public Actioner stopAction(Actioner actioner) throws IOException,
-			ServiceException, NotAppropriateStatusException {
-		if (actioner != null) {
+	public Actioner stopAction(Actioner actioner) throws Exception {
+		if (actioner != null && actioner.getAct_id() != 0) {
 
 			switch (actioner.getAct_type()) {
 
@@ -357,6 +381,8 @@ ISpecificActionerService
 
 				// ds18b20
 
+				
+				//First, checks if a process is currently running 
 				Process proc = null;
 				try {
 					proc = Runtime.getRuntime().exec(getTemperatureRunningGrep);
@@ -369,22 +395,31 @@ ISpecificActionerService
 
 				String line = null;
 
-				
 				int counter = 0;
 				while ((line = br.readLine()) != null) {
 
+					// Checks if it is really the running batch
 					if (line.matches(commandLineRegexp)) {
 
 						System.out.println("Matching process found !");
 
+						/*
+						 * Returns PID of program using bra_id, etape_id and act_id 
+						 * So no way we kill the wrong process
+						 */
 						String pid = this.getPIDFromPs("bchrectemp.py "
 								+ actioner.getAct_brassin().getBra_id() + " "
-								+ actioner.getAct_etape().getEtp_id());
+								+ actioner.getAct_etape().getEtp_id()) + " "
+								+ actioner.getAct_id();
 
 						if (pid != "") {
+							
+							// Kills the process !
 							Runtime.getRuntime().exec("kill -SIGTERM " + pid);
 							counter++;
 						}
+						
+						//records in DB 
 
 						actioner = this.stopActionInDatabase(actioner);
 					}
@@ -415,10 +450,23 @@ ISpecificActionerService
 			}
 
 		}
+		else {
+			
+			logger.severe("Actioner ID is null, can't stop null actioner !!");
+			throw new Exception();
+		}
 		return actioner;
 
 	}
 
+	/**
+	 * This method returns PIDs for line command
+	 * Greps over line parameter, deletes grep search process and display PID (2nd column)
+	 * 
+	 * @param line
+	 * @return If the process exists, return PID as String, else empty String
+	 * @throws IOException
+	 */
 	public String getPIDFromPs(String line) throws IOException {
 
 		String result = null;

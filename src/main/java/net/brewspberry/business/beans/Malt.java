@@ -24,10 +24,14 @@ public class Malt extends Ingredient implements Serializable{
 	private String malt_cereale;
     private String malt_type;
     private Integer malt_couleur;
-    
+
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="malt_bra_id")
     private Brassin malt_brassin;
+    
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="malt_etp_id")
+    private Brassin malt_etape;
     
 	public Malt() {
 		super();
