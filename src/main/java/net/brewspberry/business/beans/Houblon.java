@@ -29,6 +29,11 @@ public class Houblon extends Ingredient implements Serializable {
     private Brassin hbl_brassin;
     
     
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="hbl_etp_id")
+    private Etape hbl_etape;
+    
+    
 	public Houblon() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -72,6 +77,12 @@ public class Houblon extends Ingredient implements Serializable {
 		return "Houblon [hbl_variete=" + hbl_variete + ", hbl_acide_alpha="
 				+ hbl_acide_alpha + ", hbl_aromes=" + hbl_aromes
 				+ ", hbl_type=" + hbl_type + "]";
+	}
+	public Etape getHbl_etape() {
+		return hbl_etape;
+	}
+	public void setHbl_etape(Etape hbl_etape) {
+		this.hbl_etape = hbl_etape;
 	}
 
     

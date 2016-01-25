@@ -62,6 +62,9 @@ public class Etape implements Serializable{
     List<Etape> bra_etapes;
     
     
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="ie_etape")
+    private List<IngredientEtape> etp_ingredientEtapes;
+    
 	public Etape() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -159,6 +162,50 @@ public class Etape implements Serializable{
 	public void setEtp_temperature_measurement(
 			List<TemperatureMeasurement> etp_temperature_measurement) {
 		this.etp_temperature_measurement = etp_temperature_measurement;
+	}
+
+	public List<Malt> getEtp_malts() {
+		return etp_malts;
+	}
+
+	public void setEtp_malts(List<Malt> etp_malts) {
+		this.etp_malts = etp_malts;
+	}
+
+	public List<Houblon> getEtp_houblons() {
+		return etp_houblons;
+	}
+
+	public void setEtp_houblons(List<Houblon> etp_houblons) {
+		this.etp_houblons = etp_houblons;
+	}
+
+	public List<Levure> getEtp_levures() {
+		return etp_levures;
+	}
+
+	public void setEtp_levures(List<Levure> etp_levures) {
+		this.etp_levures = etp_levures;
+	}
+
+	public List<Etape> getBra_etapes() {
+		return bra_etapes;
+	}
+
+	public void setBra_etapes(List<Etape> bra_etapes) {
+		this.bra_etapes = bra_etapes;
+	}
+
+	public List<IngredientEtape> getEtp_ingredientEtapes() {
+		return etp_ingredientEtapes;
+	}
+
+	public void setEtp_ingredientEtapes(List<IngredientEtape> etp_ingredientEtapes) {
+		this.etp_ingredientEtapes = etp_ingredientEtapes;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	@Override

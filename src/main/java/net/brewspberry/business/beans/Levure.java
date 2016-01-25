@@ -26,7 +26,11 @@ public class Levure extends Ingredient implements Serializable {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="lev_bra_id")
     private Brassin lev_brassin;
+
     
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="lev_etp_id")
+    private Etape lev_etape;
     
 	public Levure() {
 		super();
@@ -72,6 +76,14 @@ public class Levure extends Ingredient implements Serializable {
 
 	public void setLev_floculation(String lev_floculation) {
 		this.lev_floculation = lev_floculation;
+	}
+
+	public Etape getLev_etape() {
+		return lev_etape;
+	}
+
+	public void setLev_etape(Etape lev_etape) {
+		this.lev_etape = lev_etape;
 	}
 	
 

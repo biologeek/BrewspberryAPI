@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -37,9 +38,9 @@ public abstract class Ingredient implements Serializable {
 	private String ing_desc;
 	
     private String ing_fournisseur;
-    private Double ing_quantite;
-    private Double ing_prix;
     
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="ie_ingredient")
+    private List<IngredientEtape> ing_ingredientEtape;
     
     
 	public Ingredient() {
@@ -64,18 +65,6 @@ public abstract class Ingredient implements Serializable {
 	public void setIng_fournisseur(String ing_fournisseur) {
 		this.ing_fournisseur = ing_fournisseur;
 	}
-	public Double getIng_quantite() {
-		return ing_quantite;
-	}
-	public void setIng_quantite(Double ing_quantite) {
-		this.ing_quantite = ing_quantite;
-	}
-	public Double getIng_prix() {
-		return ing_prix;
-	}
-	public void setIng_prix(Double ing_prix) {
-		this.ing_prix = ing_prix;
-	}
 	public String getIng_disc() {
 		return ing_desc;
 	}
@@ -86,11 +75,9 @@ public abstract class Ingredient implements Serializable {
 		return serialVersionUID;
 	}
 
-
 	@Override
 	public String toString() {
 		return "Ingredient [ing_id=" + ing_id + ", ing_desc=" + ing_desc
-				+ ", ing_fournisseur=" + ing_fournisseur + ", ing_quantite="
-				+ ing_quantite + ", ing_prix=" + ing_prix + "]";
+				+ ", ing_fournisseur=" + ing_fournisseur + "]";
 	}
 }
