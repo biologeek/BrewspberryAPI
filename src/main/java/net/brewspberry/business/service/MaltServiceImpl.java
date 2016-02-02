@@ -7,8 +7,6 @@ import net.brewspberry.business.IGenericDao;
 import net.brewspberry.business.IGenericService;
 import net.brewspberry.business.ISpecificIngredientService;
 import net.brewspberry.business.ISpecificMaltDAO;
-import net.brewspberry.business.beans.Houblon;
-import net.brewspberry.business.beans.Ingredient;
 import net.brewspberry.business.beans.Malt;
 import net.brewspberry.dao.MaltDAOImpl;
 import net.brewspberry.exceptions.DAOException;
@@ -82,7 +80,9 @@ public class MaltServiceImpl implements IGenericService<Malt>, ISpecificMaltDAO,
 					Malt currentIngredient = maltDAO.getElementById(currentID);
 					
 					currentIngredient.setIng_id(0);
-					currentIngredient.setIng_quantite(0.0);
+								
+					
+					currentIngredient.setIng_quantite((float) 0.0);
 					currentIngredient.setMalt_brassin(null);
 
 					if (!currentIngredient.equals(new Malt())){

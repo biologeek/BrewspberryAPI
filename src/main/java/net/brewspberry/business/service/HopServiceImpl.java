@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javassist.expr.NewArray;
 import net.brewspberry.business.IGenericDao;
 import net.brewspberry.business.IGenericService;
 import net.brewspberry.business.ISpecificIngredientService;
 import net.brewspberry.business.beans.Houblon;
-import net.brewspberry.business.beans.Ingredient;
 import net.brewspberry.dao.HopDaoImpl;
 import net.brewspberry.exceptions.DAOException;
 import net.brewspberry.util.LogManager;
@@ -88,8 +86,8 @@ public class HopServiceImpl implements IGenericService<Houblon>, ISpecificIngred
 					Houblon currentIngredient = hopDao.getElementById(currentNameNumeric);
 					
 					//Resetting ID so that it is saved when creating new brew
-					currentIngredient.setIng_id(0);
-					currentIngredient.setIng_quantite(0.0);
+					currentIngredient.setIng_id((long) 0);
+					//currentIngredient.getIng_ingredientEtape().(0.0);
 					currentIngredient.setHbl_brassin(null);
 					
 					if (currentIngredient != null){

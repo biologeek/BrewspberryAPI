@@ -6,9 +6,7 @@ import java.util.List;
 import net.brewspberry.business.IGenericDao;
 import net.brewspberry.business.IGenericService;
 import net.brewspberry.business.ISpecificIngredientService;
-import net.brewspberry.business.beans.Ingredient;
 import net.brewspberry.business.beans.Levure;
-import net.brewspberry.business.beans.Malt;
 import net.brewspberry.dao.YeastDAOImpl;
 import net.brewspberry.exceptions.DAOException;
 
@@ -77,7 +75,7 @@ public class YeastServiceImpl implements IGenericService<Levure>,
 					}
 
 					Levure currentIngredient = levureDao.getElementById(currentID);
-					currentIngredient.setIng_id(0);
+					currentIngredient.setIng_id((long) 0);
 					currentIngredient.setLev_brassin(null);
 
 					if (!currentIngredient.equals(new Levure())) {

@@ -48,7 +48,7 @@ public class MaltDAOImpl implements IGenericDao<Malt> {
 
 		Malt result = new Malt();
 
-		if (arg0.getIng_Id() != 0) {
+		if (arg0.getIng_id() != 0) {
 			try {
 				session.update(arg0);
 				tx.commit();

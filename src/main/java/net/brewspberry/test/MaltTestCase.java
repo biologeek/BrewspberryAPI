@@ -22,7 +22,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class MaltTestCase {
-
+/*
 	static IGenericService<Malt> service=new MaltServiceImpl();
 	
 	Malt malt = new Malt();
@@ -40,7 +40,7 @@ public class MaltTestCase {
 	public void setUp() throws Exception {
 		
 		malt.setIng_fournisseur("MaltEurop");
-		malt.setIng_prix(9.89);
+		/*malt.setIng_prix(9.89);
 		malt.setIng_quantite(10.0);
 		malt.setMalt_cereale("Orge");
 		malt.setMalt_couleur(5);
@@ -78,5 +78,5 @@ public class MaltTestCase {
 		}
 
 	}
-
+*/
 }

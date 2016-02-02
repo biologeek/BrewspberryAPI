@@ -1,13 +1,16 @@
 package net.brewspberry.util;
 
+import net.brewspberry.business.beans.AbstractIngredient;
 import net.brewspberry.business.beans.Actioner;
 import net.brewspberry.business.beans.Biere;
 import net.brewspberry.business.beans.Brassin;
 import net.brewspberry.business.beans.Etape;
 import net.brewspberry.business.beans.Houblon;
-import net.brewspberry.business.beans.Ingredient;
 import net.brewspberry.business.beans.Levure;
 import net.brewspberry.business.beans.Malt;
+import net.brewspberry.business.beans.SimpleHoublon;
+import net.brewspberry.business.beans.SimpleLevure;
+import net.brewspberry.business.beans.SimpleMalt;
 import net.brewspberry.business.beans.Temperature;
 import net.brewspberry.business.beans.TemperatureMeasurement;
 
@@ -15,12 +18,10 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
 
 @SuppressWarnings("deprecation")
 public class HibernateUtil {
 
-	private static ServiceRegistry serviceRegistry;
 	private static final ThreadLocal<Session> threadLocal = new ThreadLocal<Session>();
 	private static SessionFactory sessionFactory;
 
@@ -42,13 +43,16 @@ public class HibernateUtil {
 			configuration.configure()
 				.addAnnotatedClass(Malt.class)
 				.addAnnotatedClass(Houblon.class)
-				.addAnnotatedClass(Ingredient.class)
+				.addAnnotatedClass(Levure.class)
+				.addAnnotatedClass(SimpleMalt.class)
+				.addAnnotatedClass(SimpleHoublon.class)
+				.addAnnotatedClass(SimpleLevure.class)
+				.addAnnotatedClass(AbstractIngredient.class)
 				.addAnnotatedClass(Etape.class)
 				.addAnnotatedClass(Biere.class)
 				.addAnnotatedClass(Brassin.class)
 				.addAnnotatedClass(Temperature.class)
 				.addAnnotatedClass(TemperatureMeasurement.class)
-				.addAnnotatedClass(Levure.class)
 				.addAnnotatedClass(Actioner.class);
 			
 			sessionFactory = configuration.buildSessionFactory();

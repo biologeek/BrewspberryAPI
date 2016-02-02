@@ -2,9 +2,9 @@ package net.brewspberry.business;
 
 import java.util.List;
 
-import net.brewspberry.business.beans.Ingredient;
+import net.brewspberry.business.beans.AbstractIngredient;
 
 public interface ISpecificIngredientService {
-	<T extends Ingredient> List<T>  getIngredientFromArrayId(String[] array);
+	<T extends AbstractIngredient> List<T>  getIngredientFromArrayId(String[] array);
 
 }

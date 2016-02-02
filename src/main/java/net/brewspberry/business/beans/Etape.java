@@ -31,11 +31,7 @@ public class Etape implements Serializable{
     private DurationBO etp_duree;
     private Double etp_temperature_theorique;
     private String etp_remarque;
-    
-    @OneToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="ing_id")
-    private Ingredient etp_ing_ajoute;
-    private Date etp_date_ajout_ing;
+   
     
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="etp_bra_id")
@@ -62,8 +58,6 @@ public class Etape implements Serializable{
     List<Etape> bra_etapes;
     
     
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="ie_etape")
-    private List<IngredientEtape> etp_ingredientEtapes;
     
 	public Etape() {
 		super();
@@ -138,23 +132,7 @@ public class Etape implements Serializable{
 	public void setEtp_remarque(String etp_remarque) {
 		this.etp_remarque = etp_remarque;
 	}
-
-	public Ingredient getEtp_ing_ajoute() {
-		return etp_ing_ajoute;
-	}
-
-	public void setEtp_ing_ajoute(Ingredient etp_ing_ajoute) {
-		this.etp_ing_ajoute = etp_ing_ajoute;
-	}
-
-	public Date getEtp_date_ajout_ing() {
-		return etp_date_ajout_ing;
-	}
-
-	public void setEtp_date_ajout_ing(Date etp_date_ajout_ing) {
-		this.etp_date_ajout_ing = etp_date_ajout_ing;
-	}
-
+	
 	public List<TemperatureMeasurement> getEtp_temperature_measurement() {
 		return etp_temperature_measurement;
 	}
@@ -196,14 +174,6 @@ public class Etape implements Serializable{
 		this.bra_etapes = bra_etapes;
 	}
 
-	public List<IngredientEtape> getEtp_ingredientEtapes() {
-		return etp_ingredientEtapes;
-	}
-
-	public void setEtp_ingredientEtapes(List<IngredientEtape> etp_ingredientEtapes) {
-		this.etp_ingredientEtapes = etp_ingredientEtapes;
-	}
-
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
@@ -215,7 +185,6 @@ public class Etape implements Serializable{
 				+ ", etp_fin=" + etp_fin + ", etp_duree=" + etp_duree
 				+ ", etp_temperature_theorique=" + etp_temperature_theorique
 				+ ", etp_remarque=" + etp_remarque 
-				+ ", etp_date_ajout_ing=" + etp_date_ajout_ing
 				+ "]";
 	}
     

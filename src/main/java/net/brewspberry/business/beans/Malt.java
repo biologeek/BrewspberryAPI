@@ -15,15 +15,16 @@ import javax.persistence.Table;
 @Entity
 @DiscriminatorValue("m")
 @Table(name="malt")
-public class Malt extends Ingredient implements Serializable{
+public class Malt extends SimpleMalt implements Serializable{
 
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 4518248665359104487L;
-	private String malt_cereale;
-    private String malt_type;
-    private Integer malt_couleur;
+	private static final long serialVersionUID = -4717132502498393810L;
+
+	/**
+	 * Malt attached to brew and step
+	 */
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="malt_bra_id")
@@ -33,28 +34,10 @@ public class Malt extends Ingredient implements Serializable{
     @JoinColumn(name="malt_etp_id")
     private Brassin malt_etape;
     
+    
 	public Malt() {
 		super();
 		// TODO Auto-generated constructor stub
-	}
-	
-	public String getMalt_cereale() {
-		return malt_cereale;
-	}
-	public void setMalt_cereale(String malt_cereale) {
-		this.malt_cereale = malt_cereale;
-	}
-	public String getMalt_type() {
-		return malt_type;
-	}
-	public void setMalt_type(String malt_type) {
-		this.malt_type = malt_type;
-	}
-	public Integer getMalt_couleur() {
-		return malt_couleur;
-	}
-	public void setMalt_couleur(Integer malt_couleur) {
-		this.malt_couleur = malt_couleur;
 	}
 
 	public Brassin getMalt_brassin() {
@@ -65,20 +48,12 @@ public class Malt extends Ingredient implements Serializable{
 		this.malt_brassin = malt_brassin;
 	}
 
-	public static long getSerialversionuid() {
-		
-		return serialVersionUID;
+	public Brassin getMalt_etape() {
+		return malt_etape;
 	}
 
-	public long getIng_Id (){
-		return super.getIng_id();
-	}
-
-	@Override
-	public String toString() {
-		
-		return super.toString()+" Malt [malt_cereale=" + malt_cereale + ", malt_type="
-				+ malt_type + ", malt_couleur=" + malt_couleur + "]";
+	public void setMalt_etape(Brassin malt_etape) {
+		this.malt_etape = malt_etape;
 	}
 	
 }

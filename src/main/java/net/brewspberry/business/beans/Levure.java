@@ -12,16 +12,19 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
-@DiscriminatorValue("l")
-public class Levure extends Ingredient implements Serializable {
+public class Levure extends SimpleLevure implements Serializable {
     
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = -8449094340159438833L;
-	private String lev_espece;
-    private String lev_floculation;
-    private String lev_aromes;
+	private static final long serialVersionUID = 6748515267938143079L;
+
+
+	/**
+	 * 
+	 * Link between Levure, brew and step
+	 * 
+	 */
     
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="lev_bra_id")
@@ -36,46 +39,13 @@ public class Levure extends Ingredient implements Serializable {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public Brassin getLev_brassin() {
 		return lev_brassin;
 	}
 
 	public void setLev_brassin(Brassin lev_brassin) {
 		this.lev_brassin = lev_brassin;
-	}
-
-	public String getLev_espece() {
-		return lev_espece;
-	}
-	public void setLev_espece(String lev_espece) {
-		this.lev_espece = lev_espece;
-	}
-	public String getLev_aromes() {
-		return lev_aromes;
-	}
-	public void setLev_aromes(String lev_aromes) {
-		this.lev_aromes = lev_aromes;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	@Override
-	public String toString() {
-		return "Levure [lev_espece=" + lev_espece + ", elv_floculation="
-				+ lev_floculation + ", lev_aromes=" + lev_aromes
-				+", toString()=" + super.toString()
-				+ "]";
-	}
-
-	public String getLev_floculation() {
-		return lev_floculation;
-	}
-
-	public void setLev_floculation(String lev_floculation) {
-		this.lev_floculation = lev_floculation;
 	}
 
 	public Etape getLev_etape() {
@@ -85,6 +55,8 @@ public class Levure extends Ingredient implements Serializable {
 	public void setLev_etape(Etape lev_etape) {
 		this.lev_etape = lev_etape;
 	}
+
+	
 	
 
 }
