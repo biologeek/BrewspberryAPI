@@ -7,6 +7,8 @@ import net.brewspberry.business.IGenericDao;
 import net.brewspberry.business.IGenericService;
 import net.brewspberry.business.ISpecificIngredientService;
 import net.brewspberry.business.beans.Levure;
+import net.brewspberry.business.beans.SimpleLevure;
+import net.brewspberry.dao.SimpleYeastDAOImpl;
 import net.brewspberry.dao.YeastDAOImpl;
 import net.brewspberry.exceptions.DAOException;
 
@@ -17,14 +19,14 @@ public class YeastServiceImpl implements IGenericService<Levure>,
 
 	@Override
 	public void deleteElement(long arg0) {
-		// TODO Auto-generated method stub
 
+		levureDao.deleteElement(arg0);
 	}
 
 	@Override
 	public void deleteElement(Levure arg0) {
-		// TODO Auto-generated method stub
 
+		levureDao.deleteElement(arg0);
 	}
 
 	@Override
@@ -39,20 +41,18 @@ public class YeastServiceImpl implements IGenericService<Levure>,
 
 	@Override
 	public Levure getElementById(long arg0) {
-		// TODO Auto-generated method stub
-		return null;
+		return levureDao.getElementById(arg0);
 	}
 
 	@Override
 	public Levure save(Levure arg0) throws DAOException {
-		// TODO Auto-generated method stub
-		return null;
+		return levureDao.save(arg0);
+
 	}
 
 	@Override
 	public Levure update(Levure arg0) {
-		// TODO Auto-generated method stub
-		return null;
+		return levureDao.update(arg0);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -74,7 +74,8 @@ public class YeastServiceImpl implements IGenericService<Levure>,
 						e.printStackTrace();
 					}
 
-					Levure currentIngredient = levureDao.getElementById(currentID);
+					Levure currentIngredient = levureDao
+							.getElementById(currentID);
 					currentIngredient.setIng_id((long) 0);
 					currentIngredient.setLev_brassin(null);
 
@@ -90,4 +91,83 @@ public class YeastServiceImpl implements IGenericService<Levure>,
 		return result;
 	}
 
+	public class SimpleYeastServiceImpl implements IGenericService<SimpleLevure>,
+			ISpecificIngredientService {
+
+		IGenericDao<SimpleLevure> levureDao = new SimpleYeastDAOImpl();
+
+		@Override
+		public void deleteElement(long arg0) {
+			levureDao.deleteElement(arg0);
+
+		}
+
+		@Override
+		public void deleteElement(SimpleLevure arg0) {
+			levureDao.deleteElement(arg0);
+
+		}
+
+		@Override
+		public List<SimpleLevure> getAllDistinctElements() {
+			return levureDao.getAllDistinctElements();
+		}
+
+		@Override
+		public List<SimpleLevure> getAllElements() {
+			return levureDao.getAllElements();
+		}
+
+		@Override
+		public SimpleLevure getElementById(long arg0) {
+			return levureDao.getElementById(arg0);
+		}
+
+		@Override
+		public SimpleLevure save(SimpleLevure arg0) throws DAOException {
+			
+			return levureDao.save(arg0);
+		}
+
+		@Override
+		public SimpleLevure update(SimpleLevure arg0) {
+			return levureDao.update(arg0);
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public List<SimpleLevure> getIngredientFromArrayId(String[] array) {
+			List<SimpleLevure> result = new ArrayList<SimpleLevure>();
+
+			if (array != null) {
+
+				if (array.length != 0) {
+
+					for (int i = 0; i < array.length; i++) {
+
+						long currentID = 0;
+
+						try {
+							currentID = Long.parseLong(array[i]);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						SimpleLevure currentIngredient = levureDao
+								.getElementById(currentID);
+						currentIngredient.setIng_id((long) 0);
+
+						if (!currentIngredient.equals(new SimpleLevure())) {
+							result.add(currentIngredient);
+						}
+					}
+
+				}
+
+			}
+
+			return result;
+		}
+
+	}
 }

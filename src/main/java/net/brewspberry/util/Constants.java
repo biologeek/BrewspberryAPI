@@ -46,6 +46,31 @@ public abstract class Constants {
 		// TODO Auto-generated constructor stub
 	}
 	
+	
+	public static Map<String, String> INGREDIENT_TYPES = new HashMap<String,String>();
+	
+	static {
+
+		INGREDIENT_TYPES.put("malt", "Malt");
+		INGREDIENT_TYPES.put("hop", "Hop");
+		INGREDIENT_TYPES.put("yeast", "Yeast");
+		
+	}
+	
+	public static Map<String, String> CEREALS = new HashMap<String, String>();
+	static {
+
+		CEREALS.put("wheat", "Wheat");
+		CEREALS.put("barley", "Barley");
+		CEREALS.put("oat", "Oat");
+		CEREALS.put("buckwheat", "Buckwheat");
+		CEREALS.put("corn", "Corn");
+		CEREALS.put("rye", "Rye");
+		CEREALS.put("spelt", "Spelt");
+		CEREALS.put("rice", "Rice");
+
+	}
+	
 	public static final Map<String, String> BREW_STATUS = new HashMap<String, String>();
 
 	static	{

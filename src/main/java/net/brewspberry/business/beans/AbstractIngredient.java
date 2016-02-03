@@ -33,7 +33,7 @@ public abstract class AbstractIngredient implements Serializable {
 	 */
 	private static final long serialVersionUID = -5363007498088123647L;
 	
-	@Id@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id@GeneratedValue(strategy=GenerationType.TABLE)
 	@Column(nullable=false)
 	private long ing_id;
 	private String ing_desc;
@@ -41,9 +41,6 @@ public abstract class AbstractIngredient implements Serializable {
     private String ing_fournisseur;
     
 
-    private float ing_quantite;
-    private float ing_prix;
-    
     
 	public long getIng_id() {
 		return ing_id;
@@ -73,18 +70,6 @@ public abstract class AbstractIngredient implements Serializable {
 		return serialVersionUID;
 	}
 
-	public float getIng_quantite() {
-		return ing_quantite;
-	}
-	public void setIng_quantite(float ing_quantite) {
-		this.ing_quantite = ing_quantite;
-	}
-	public float getIng_prix() {
-		return ing_prix;
-	}
-	public void setIng_prix(float ing_prix) {
-		this.ing_prix = ing_prix;
-	}
 	@Override
 	public String toString() {
 		return "Ingredient [ing_id=" + ing_id + ", ing_desc=" + ing_desc

@@ -8,7 +8,9 @@ import net.brewspberry.business.IGenericDao;
 import net.brewspberry.business.IGenericService;
 import net.brewspberry.business.ISpecificIngredientService;
 import net.brewspberry.business.beans.Houblon;
+import net.brewspberry.business.beans.SimpleHoublon;
 import net.brewspberry.dao.HopDaoImpl;
+import net.brewspberry.dao.SimpleHopDaoImpl;
 import net.brewspberry.exceptions.DAOException;
 import net.brewspberry.util.LogManager;
 
@@ -17,17 +19,25 @@ public class HopServiceImpl implements IGenericService<Houblon>, ISpecificIngred
 	
 	IGenericDao<Houblon> hopDao = new HopDaoImpl ();
 	
+	
+	
 	static Logger logger = LogManager.getInstance(HopServiceImpl.class.getName());
+	
+	
+	
 	@Override
 	public Houblon save(Houblon arg0) throws DAOException {
-		// TODO Auto-generated method stub
-		return hopDao.save(arg0);
+
+		
+			return hopDao.save(arg0);
+
 	}
 
 	@Override
 	public Houblon update(Houblon arg0) {
-		// TODO Auto-generated method stub
-		return hopDao.update(arg0);
+		
+		
+			return hopDao.update(arg0);	
 	}
 
 	@Override
@@ -38,8 +48,8 @@ public class HopServiceImpl implements IGenericService<Houblon>, ISpecificIngred
 
 	@Override
 	public List<Houblon> getAllElements() {
-		// TODO Auto-generated method stub
-		return hopDao.getAllElements();
+
+			return (List<Houblon>) hopDao.getAllElements();
 	}
 
 	@Override
@@ -50,8 +60,11 @@ public class HopServiceImpl implements IGenericService<Houblon>, ISpecificIngred
 
 	@Override
 	public void deleteElement(Houblon arg0) {
-		hopDao.deleteElement(arg0);
-		
+		if (arg0 instanceof Houblon)
+			hopDao.deleteElement((Houblon) arg0);
+		else
+			hopDao.deleteElement(arg0);
+
 	}
 
 	@Override
@@ -104,6 +117,110 @@ public class HopServiceImpl implements IGenericService<Houblon>, ISpecificIngred
 		
 		return result;
 	}
+
+	public class SimpleHopServiceImpl implements IGenericService<SimpleHoublon>, ISpecificIngredientService {
+
+		
+		IGenericDao<SimpleHoublon> sHopDao = new SimpleHopDaoImpl ();
+		
+		final Logger logger = LogManager.getInstance(SimpleHopServiceImpl.class.getName());
+		@Override
+		public SimpleHoublon save(SimpleHoublon arg0) throws DAOException {
+
+				return sHopDao.save(arg0);
+
+		}
+
+		@Override
+		public SimpleHoublon update(SimpleHoublon arg0) {
+			
+				return sHopDao.update(arg0);	
+		}
+
+		@Override
+		public SimpleHoublon getElementById(long id) {
+			// TODO Auto-generated method stub
+			return sHopDao.getElementById(id);
+		}
+
+		@Override
+		public List<SimpleHoublon> getAllElements() {
+
+				return (List<SimpleHoublon>) sHopDao.getAllElements();
+		}
+
+		@Override
+		public void deleteElement(long id) {
+			sHopDao.deleteElement(id);
+			
+		}
+
+		@Override
+		public void deleteElement(SimpleHoublon arg0) {
+			
+				sHopDao.deleteElement(arg0);
+
+		}
+
+		@Override
+		public List<SimpleHoublon> getAllDistinctElements() {
+			// TODO Auto-generated method stub
+			return sHopDao.getAllDistinctElements();
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public List<SimpleHoublon> getIngredientFromArrayId(String[] array) {
+			List<SimpleHoublon> result = new ArrayList<SimpleHoublon>();
+			
+			
+			if (array != null) {
+				
+				if (array.length != 0){
+					
+					for (int i = 0 ; i < array.length ; i++){
+						
+						String currentName = "";
+						long currentNameNumeric = 0;
+						System.out.println(array);
+						try {
+							currentName = array[i];
+							currentNameNumeric = Long.parseLong(currentName);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+							logger.info("Getting hopName "+currentName);
+						
+						SimpleHoublon currentIngredient = hopDao.getElementById(currentNameNumeric);
+						
+						//Resetting ID so that it is saved when creating new brew
+						currentIngredient.setIng_id((long) 0);
+						//currentIngredient.getIng_ingredientEtape().(0.0);
+						
+						if (currentIngredient != null){
+							if (!currentIngredient.equals(new Houblon())){
+								result.add(currentIngredient);	
+							}			
+						}
+					}
+					
+				}
+				
+			}
+			
+			
+			return result;
+		}
+
+		
+		
+		
+
+
+	}
+
+	
+	
 
 
 }

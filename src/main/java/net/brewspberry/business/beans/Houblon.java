@@ -30,7 +30,10 @@ public class Houblon extends SimpleHoublon implements Serializable {
     @JoinColumn(name="hbl_etp_id")
     private Etape hbl_etape;
     
-    
+
+    private float ing_quantite;
+    private float ing_prix;
+        
 	public Houblon() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -55,10 +58,32 @@ public class Houblon extends SimpleHoublon implements Serializable {
 	public void setHbl_etape(Etape hbl_etape) {
 		this.hbl_etape = hbl_etape;
 	}
+
+
+	public float getIng_quantite() {
+		return ing_quantite;
+	}
+
+
+	public void setIng_quantite(float ing_quantite) {
+		this.ing_quantite = ing_quantite;
+	}
+
+
+	public float getIng_prix() {
+		return ing_prix;
+	}
+
+
+	public void setIng_prix(float ing_prix) {
+		this.ing_prix = ing_prix;
+	}
+
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 	
-	
-	
-    
 	
     
 }

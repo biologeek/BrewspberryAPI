@@ -14,7 +14,6 @@ import javax.persistence.Table;
 
 @Entity
 @DiscriminatorValue("m")
-@Table(name="malt")
 public class Malt extends SimpleMalt implements Serializable{
 
     /**
@@ -33,6 +32,10 @@ public class Malt extends SimpleMalt implements Serializable{
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="malt_etp_id")
     private Brassin malt_etape;
+    
+
+    private float ing_quantite;
+    private float ing_prix;
     
     
 	public Malt() {
@@ -54,6 +57,26 @@ public class Malt extends SimpleMalt implements Serializable{
 
 	public void setMalt_etape(Brassin malt_etape) {
 		this.malt_etape = malt_etape;
+	}
+
+	public float getIng_quantite() {
+		return ing_quantite;
+	}
+
+	public void setIng_quantite(float ing_quantite) {
+		this.ing_quantite = ing_quantite;
+	}
+
+	public float getIng_prix() {
+		return ing_prix;
+	}
+
+	public void setIng_prix(float ing_prix) {
+		this.ing_prix = ing_prix;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 	
 }
