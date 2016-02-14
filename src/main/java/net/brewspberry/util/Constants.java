@@ -31,7 +31,7 @@ public abstract class Constants {
 	public static String PROJECT_ROOT_PATH = "/opt/tomcat/webapps";
 	public static String BREW_VIEWER = "brewspberry-viewer";
 	public static String BREW_API = "brewspberry-core";
-	public static String BREW_BATCHES = "BrewspberryPi-Batches";
+	public static String BREW_BATCHES = "brewspberry-batches";
 	public static String BREW_TEMP = "brewspberry-api";
 	public static String BREW_CONF = "conf";
 	
@@ -70,6 +70,28 @@ public abstract class Constants {
 		CEREALS.put("rice", "Rice");
 
 	}
+
+	
+	public static Map<String, String> MALT_TYPE = new HashMap<String, String>();
+	static {
+
+		MALT_TYPE.put("white", "White");
+		MALT_TYPE.put("blond", "Blond");
+		MALT_TYPE.put("amber", "Amber");
+		MALT_TYPE.put("red", "Red");
+		MALT_TYPE.put("black", "Black");
+
+	}
+
+	
+	public static Map<String, String> HOP_TYPE = new HashMap<String, String>();
+	static {
+
+		HOP_TYPE.put("0", "Bittering");
+		HOP_TYPE.put("1", "Aromatic");
+		HOP_TYPE.put("2", "Both");
+		
+}
 	
 	public static final Map<String, String> BREW_STATUS = new HashMap<String, String>();
 
