@@ -97,7 +97,8 @@ public class BrassinDaoImpl implements IGenericDao<Brassin>, ISpecificBrassinDAO
 			tx.commit();
 		} catch (HibernateException e) {
 			e.printStackTrace();
-			tx.rollback();
+			// Not rollbacking as it generates TransactionException 
+			//tx.rollback();
 			result = new ArrayList<Brassin>();
 		}
 		finally {
