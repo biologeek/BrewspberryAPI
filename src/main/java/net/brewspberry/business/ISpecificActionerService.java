@@ -14,4 +14,6 @@ public interface ISpecificActionerService {
 
 	public Actioner startAction(Actioner actioner) throws Exception;
 	public Actioner stopAction(Actioner actioner) throws Exception;
+	public Actioner isAlreadyStoredAndActivated (Actioner arg0);
+
 }

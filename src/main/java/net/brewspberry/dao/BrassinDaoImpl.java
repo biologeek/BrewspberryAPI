@@ -2,6 +2,7 @@ package net.brewspberry.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -13,9 +14,12 @@ import net.brewspberry.business.beans.Biere;
 import net.brewspberry.business.beans.Brassin;
 import net.brewspberry.exceptions.DAOException;
 import net.brewspberry.util.HibernateUtil;
+import net.brewspberry.util.LogManager;
 
 public class BrassinDaoImpl implements IGenericDao<Brassin>, ISpecificBrassinDAO {
 
+	
+	static final Logger logger = LogManager.getInstance(BrassinDaoImpl.class.getName());
 	private Session session = HibernateUtil.getSession();
 
 	@Override
@@ -25,7 +29,7 @@ public class BrassinDaoImpl implements IGenericDao<Brassin>, ISpecificBrassinDAO
 		try {
 			long id = (long) session.save(arg0);
 			tx.commit();
-
+			logger.info("Saved ID : "+id);
 			arg0.setBra_id(id);
 			return arg0;
 		} catch (HibernateException e) {

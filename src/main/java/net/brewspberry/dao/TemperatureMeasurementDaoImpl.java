@@ -1,31 +1,31 @@
 package net.brewspberry.dao;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityNotFoundException;
 
 import org.hibernate.Criteria;
-import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.hibernate.criterion.Expression;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import com.mysql.jdbc.PreparedStatement;
-
-import net.brewspberry.business.IGenericService;
+import net.brewspberry.business.IGenericDao;
 import net.brewspberry.business.ISpecificTemperatureMeasurementService;
-import net.brewspberry.business.beans.Brassin;
 import net.brewspberry.business.beans.Etape;
 import net.brewspberry.business.beans.TemperatureMeasurement;
-import net.brewspberry.business.service.BrassinServiceImpl;
+import net.brewspberry.exceptions.DAOException;
 import net.brewspberry.util.HibernateUtil;
+import net.brewspberry.util.LogManager;
 
 public class TemperatureMeasurementDaoImpl implements
-		ISpecificTemperatureMeasurementService {
+		ISpecificTemperatureMeasurementService, IGenericDao<TemperatureMeasurement> {
 
+	
+	Logger logger = LogManager.getInstance(TemperatureMeasurementDaoImpl.class.getName());
 	Session session = HibernateUtil.getSession();
 
 	@SuppressWarnings("unchecked")
@@ -141,6 +141,72 @@ public class TemperatureMeasurementDaoImpl implements
 	@Override
 	public TemperatureMeasurement getLastTemperatureMeasurementsByNameFromCSV(
 			String uuidOrName, Boolean uuid) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public TemperatureMeasurement save(TemperatureMeasurement arg0)
+			throws DAOException {
+		Transaction tx = (Transaction) session.beginTransaction();
+		TemperatureMeasurement result = null;
+		try {
+			
+			long id = (long) session.save(arg0);
+			tx.commit();
+			
+			result = this.getElementById(id);
+			
+			logger.info("Saved TemperatureMeasurement with id "+id);
+			
+		}catch(HibernateException e){
+			
+			tx.rollback();
+			e.printStackTrace();
+		}
+
+		
+		return result;
+	}
+
+	@Override
+	public TemperatureMeasurement update(TemperatureMeasurement arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public TemperatureMeasurement getElementById(long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public TemperatureMeasurement getElementByName(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<TemperatureMeasurement> getAllElements() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteElement(long id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteElement(TemperatureMeasurement arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<TemperatureMeasurement> getAllDistinctElements() {
 		// TODO Auto-generated method stub
 		return null;
 	}

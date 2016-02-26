@@ -18,9 +18,10 @@ import net.brewspberry.business.beans.Brassin;
 import net.brewspberry.business.beans.Etape;
 import net.brewspberry.business.beans.TemperatureMeasurement;
 import net.brewspberry.dao.TemperatureMeasurementDaoImpl;
+import net.brewspberry.exceptions.DAOException;
 
 public class TemperatureMeasurementServiceImpl implements
-		ISpecificTemperatureMeasurementService {
+		ISpecificTemperatureMeasurementService, IGenericService<TemperatureMeasurement> {
 
 	private String measurementsCSV = "/home/xavier/ds18b20_raw_measurements.csv";
 
@@ -30,6 +31,8 @@ public class TemperatureMeasurementServiceImpl implements
 	private IGenericService<Brassin> brassinService = new BrassinServiceImpl();
 
 	private IGenericService<Etape> etapeService = new EtapeServiceImpl();
+	
+	private IGenericDao<TemperatureMeasurement> tmesDao = new TemperatureMeasurementDaoImpl();
 
 	@Override
 	public List<TemperatureMeasurement> getTemperatureMeasurementByBrassin(
@@ -278,5 +281,47 @@ public class TemperatureMeasurementServiceImpl implements
 
 		}
 		return result;
+	}
+
+	@Override
+	public TemperatureMeasurement save(TemperatureMeasurement arg0)
+			throws DAOException {
+		return tmesDao.save(arg0);
+	}
+
+	@Override
+	public TemperatureMeasurement update(TemperatureMeasurement arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public TemperatureMeasurement getElementById(long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<TemperatureMeasurement> getAllElements() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteElement(long id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteElement(TemperatureMeasurement arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<TemperatureMeasurement> getAllDistinctElements() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

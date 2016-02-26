@@ -280,18 +280,24 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 				if (f.exists() && !f.isDirectory()) {
 
 					try {
+						if (actioner.getAct_brassin() == null || actioner.getAct_etape() == null){
+							
+							Runtime.getRuntime().exec(
+									"/usr/bin/python " + f.getAbsolutePath()+" &");
+							
+						}
+						else {
+							// Starts python job and saves action in DB
 
-						// Starts python job and saves action in DB
-
-						Runtime.getRuntime().exec(
-								"/usr/bin/python " + f.getAbsolutePath() + " "
-										+ actioner.getAct_brassin().getBra_id()
-										+ " "
-										+ actioner.getAct_etape().getEtp_id()
-										+ " " + actioner.getAct_id() + " &");
-						
-						actioner = this.startActionInDatabase(actioner);
-
+							Runtime.getRuntime().exec(
+									"/usr/bin/python " + f.getAbsolutePath() + " "
+											+ actioner.getAct_brassin().getBra_id()
+											+ " "
+											+ actioner.getAct_etape().getEtp_id()
+											+ " " + actioner.getAct_id() + " &");
+							
+							actioner = this.startActionInDatabase(actioner);
+						}
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -441,7 +447,8 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 
 						gpio.setState(PinState.LOW);
 
-						actioner = this.stopActionInDatabase(actioner);
+					// Not recording relay actions as therre may be more than one
+					//	actioner = this.stopActionInDatabase(actioner);
 					}
 
 				}
@@ -488,5 +495,26 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 		}
 
 		return result;
+	}
+	
+	/**
+	 * This method checks in DB whether Actioner is already activated or not.
+	 *	
+	 * searches on brew, step, uuid and type
+	 * 
+	 * 
+	 * @param arg0
+	 * @return stored Actioner if exists, arg0 else 
+	 */
+	public Actioner isAlreadyStoredAndActivated (Actioner arg0){
+		Actioner result = null;
+		
+		if (arg0 != null){
+			
+			result = actionerSpecDao.getActionerByFullCharacteristics(arg0);
+		
+		}
+		
+		return arg0;		
 	}
 }
