@@ -69,8 +69,7 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 
 	@Override
 	public Actioner getElementById(long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return actionerDao.getElementById(id);
 	}
 
 	@Override

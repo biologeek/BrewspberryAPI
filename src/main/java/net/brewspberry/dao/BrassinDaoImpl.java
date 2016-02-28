@@ -16,10 +16,11 @@ import net.brewspberry.exceptions.DAOException;
 import net.brewspberry.util.HibernateUtil;
 import net.brewspberry.util.LogManager;
 
-public class BrassinDaoImpl implements IGenericDao<Brassin>, ISpecificBrassinDAO {
+public class BrassinDaoImpl implements IGenericDao<Brassin>,
+		ISpecificBrassinDAO {
 
-	
-	static final Logger logger = LogManager.getInstance(BrassinDaoImpl.class.getName());
+	static final Logger logger = LogManager.getInstance(BrassinDaoImpl.class
+			.getName());
 	private Session session = HibernateUtil.getSession();
 
 	@Override
@@ -29,14 +30,13 @@ public class BrassinDaoImpl implements IGenericDao<Brassin>, ISpecificBrassinDAO
 		try {
 			long id = (long) session.save(arg0);
 			tx.commit();
-			logger.info("Saved ID : "+id);
+			logger.info("Saved ID : " + id);
 			arg0.setBra_id(id);
 			return arg0;
 		} catch (HibernateException e) {
 			tx.rollback();
 			return new Brassin();
-		}
-		finally {
+		} finally {
 			HibernateUtil.closeSession();
 		}
 	}
@@ -63,27 +63,17 @@ public class BrassinDaoImpl implements IGenericDao<Brassin>, ISpecificBrassinDAO
 		} catch (HibernateException e) {
 			tx.rollback();
 			return new Brassin();
-		}
-		finally {
+		} finally {
 			HibernateUtil.closeSession();
 		}
 	}
 
 	@Override
 	public Brassin getElementById(long id) {
-		Transaction tx = session.beginTransaction();
 		Brassin result = new Brassin();
 
-		try {
-			result = (Brassin) session.get(Brassin.class, id);
-			tx.commit();
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			tx.rollback();
-		}
-		finally {
-			HibernateUtil.closeSession();
-		}
+		result = (Brassin) session.get(Brassin.class, id);
+		HibernateUtil.closeSession();
 		return result;
 	}
 
@@ -101,11 +91,10 @@ public class BrassinDaoImpl implements IGenericDao<Brassin>, ISpecificBrassinDAO
 			tx.commit();
 		} catch (HibernateException e) {
 			e.printStackTrace();
-			// Not rollbacking as it generates TransactionException 
-			//tx.rollback();
+			// Not rollbacking as it generates TransactionException
+			// tx.rollback();
 			result = new ArrayList<Brassin>();
-		}
-		finally {
+		} finally {
 			HibernateUtil.closeSession();
 		}
 		return result;
@@ -125,8 +114,7 @@ public class BrassinDaoImpl implements IGenericDao<Brassin>, ISpecificBrassinDAO
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			tx.rollback();
-		}
-		finally {
+		} finally {
 			HibernateUtil.closeSession();
 		}
 	}

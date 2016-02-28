@@ -14,32 +14,28 @@ import net.brewspberry.util.HibernateUtil;
 
 public class EtapeDaoImpl implements IGenericDao<Etape> {
 
-	
 	private Session session = HibernateUtil.getSession();
-	
-	
+
 	@Override
 	public Etape save(Etape arg0) throws DAOException {
 		Transaction tx = session.beginTransaction();
-		
+
 		try {
-			
+
 			long etape = (long) session.save(arg0);
-			
+
 			tx.commit();
-			
+
 			arg0.setEtp_id(etape);
-			
-		}
-		catch (Exception e){
+
+		} catch (Exception e) {
 			e.printStackTrace();
 			tx.rollback();
 			arg0 = new Etape();
-		}
-		finally {
+		} finally {
 			HibernateUtil.closeSession();
 		}
-		
+
 		return arg0;
 	}
 
@@ -52,12 +48,10 @@ public class EtapeDaoImpl implements IGenericDao<Etape> {
 	@Override
 	public Etape getElementById(long id) {
 		Etape result;
-		try {
-			result = (Etape) session.get(Etape.class, id);
-		}
-		finally {
-			HibernateUtil.closeSession();
-		}
+
+		result = (Etape) session.get(Etape.class, id);
+		HibernateUtil.closeSession();
+
 		return result;
 	}
 
@@ -67,8 +61,7 @@ public class EtapeDaoImpl implements IGenericDao<Etape> {
 		List<Etape> result;
 		try {
 			result = (List<Etape>) session.createQuery("from Etape").list();
-		}
-		finally {
+		} finally {
 			HibernateUtil.closeSession();
 		}
 		return result;
@@ -100,8 +93,7 @@ public class EtapeDaoImpl implements IGenericDao<Etape> {
 		} catch (Exception e) {
 			e.printStackTrace();
 			tx.rollback();
-		}
-		finally {
+		} finally {
 			HibernateUtil.closeSession();
 		}
 

@@ -158,7 +158,7 @@ public abstract class Constants {
 	
 
 	
-	public static final String DS18B20_DEVICES_FOLDER = "/sys/bus/w1/devices/";
+	public static final String DS18B20_DEVICES_FOLDER = "/sys/bus/w1/devices";
 	public static final String DS18B20_DIR_PATTERN = "28*";
 	public static final String DS18B20_FILE_NAME = "w1_slave";
 	public static final String[] WRITABLE_ENTITIES = {"FILE", "SQL", "ALL"};
