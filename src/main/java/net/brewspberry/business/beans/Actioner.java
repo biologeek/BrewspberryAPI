@@ -163,9 +163,7 @@ public class Actioner {
 				+ act_date_debut + ", act_date_fin=" + act_date_fin
 				+ ", act_raspi_pin=" + act_raspi_pin + ", act_activated="
 				+ act_activated + ", act_used=" + act_used + ", act_brassin="
-				+ act_brassin + ", act_etape=" + act_etape
-				+ ", act_temperature_measurements="
-				+ act_temperature_measurements + "]";
+				+ act_brassin + ", act_etape=" + act_etape+"]";
 	}
 
 	@Override

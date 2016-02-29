@@ -35,8 +35,7 @@ public class SimpleMaltDAOImpl implements IGenericDao<SimpleMalt> {
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			tx.rollback();
-		}
-		finally {
+		} finally {
 			HibernateUtil.closeSession();
 		}
 		return result;
@@ -57,8 +56,7 @@ public class SimpleMaltDAOImpl implements IGenericDao<SimpleMalt> {
 			} catch (HibernateException e) {
 				e.printStackTrace();
 				tx.rollback();
-			}
-			finally {
+			} finally {
 				HibernateUtil.closeSession();
 			}
 		} else {
@@ -68,8 +66,7 @@ public class SimpleMaltDAOImpl implements IGenericDao<SimpleMalt> {
 			} catch (HibernateException | DAOException e) {
 				e.printStackTrace();
 				tx.rollback();
-			}
-			finally {
+			} finally {
 				HibernateUtil.closeSession();
 			}
 		}
@@ -83,29 +80,19 @@ public class SimpleMaltDAOImpl implements IGenericDao<SimpleMalt> {
 
 		HibernateUtil.closeSession();
 		return malt;
-		
+
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<SimpleMalt> getAllElements() {
-		Transaction tx = session.beginTransaction();
 
 		long resultId;
 		List<SimpleMalt> result = new ArrayList<SimpleMalt>();
-		try {
-			
-			result = (List<SimpleMalt>) session.createQuery("from SimpleMalt").list();
 
-			tx.commit();
-
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			tx.rollback();
-		}
-		finally {
-			HibernateUtil.closeSession();
-		}	
+		result = (List<SimpleMalt>) session.createQuery("from SimpleMalt")
+				.list();
+		HibernateUtil.closeSession();
 		return result;
 	}
 
@@ -119,8 +106,7 @@ public class SimpleMaltDAOImpl implements IGenericDao<SimpleMalt> {
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			tx.rollback();
-		}
-		finally {
+		} finally {
 			HibernateUtil.closeSession();
 		}
 	}
@@ -131,31 +117,17 @@ public class SimpleMaltDAOImpl implements IGenericDao<SimpleMalt> {
 
 		HibernateUtil.closeSession();
 
-
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<SimpleMalt> getAllDistinctElements() {
-		Transaction tx = session.beginTransaction();
 
 		List<SimpleMalt> result = new ArrayList<SimpleMalt>();
-		try {
-			
-			
-			result = session.createQuery("from SimpleMalt group by ing_desc").list();
-			
-			
-			tx.commit();
+		result = session.createQuery("from SimpleMalt group by ing_desc")
+				.list();
 
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			tx.rollback();
-		}
-		finally {
-			HibernateUtil.closeSession();
-		}
-
+		HibernateUtil.closeSession();
 		return result;
 	}
 

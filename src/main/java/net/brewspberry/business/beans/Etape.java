@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -33,7 +34,7 @@ public class Etape implements Serializable{
     private String etp_remarque;
    
     
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY, cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name="etp_bra_id")
     private Brassin etp_brassin;
     
@@ -41,17 +42,17 @@ public class Etape implements Serializable{
     private List<TemperatureMeasurement> etp_temperature_measurement;
     
     
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="act_etape")
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="act_etape", cascade=CascadeType.ALL)
     private List<Actioner> etp_actioner;
     
 
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="malt_etape")
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="malt_etape", cascade=CascadeType.ALL)
     private List<Malt> etp_malts;
     
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="hbl_etape")
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="hbl_etape", cascade=CascadeType.ALL)
     private List<Houblon> etp_houblons;
     
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="lev_etape")
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="lev_etape", cascade=CascadeType.ALL)
     private List<Levure> etp_levures;
     
     @OneToMany(fetch=FetchType.LAZY, mappedBy="etp_brassin")

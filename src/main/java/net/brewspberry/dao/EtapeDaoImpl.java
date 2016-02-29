@@ -82,20 +82,13 @@ public class EtapeDaoImpl implements IGenericDao<Etape> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Etape> getAllDistinctElements() {
-		Transaction tx = session.beginTransaction();
 
 		List<Etape> result = new ArrayList<Etape>();
-		try {
-			result = (List<Etape>) session.createQuery("from Etape")
-					.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
-			tx.commit();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			tx.rollback();
-		} finally {
-			HibernateUtil.closeSession();
-		}
+		result = (List<Etape>) session.createQuery("from Etape")
+				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+
+		HibernateUtil.closeSession();
 
 		return result;
 	}

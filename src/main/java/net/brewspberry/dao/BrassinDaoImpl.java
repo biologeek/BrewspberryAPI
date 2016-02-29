@@ -83,20 +83,10 @@ public class BrassinDaoImpl implements IGenericDao<Brassin>,
 
 		List<Brassin> result = null;
 
-		Transaction tx = session.beginTransaction();
+		result = (List<Brassin>) session.createQuery("from Brassin").list();
 
-		try {
+		HibernateUtil.closeSession();
 
-			result = (List<Brassin>) session.createQuery("from Brassin").list();
-			tx.commit();
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			// Not rollbacking as it generates TransactionException
-			// tx.rollback();
-			result = new ArrayList<Brassin>();
-		} finally {
-			HibernateUtil.closeSession();
-		}
 		return result;
 	}
 

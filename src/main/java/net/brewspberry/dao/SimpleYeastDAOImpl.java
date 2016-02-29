@@ -36,44 +36,23 @@ public class SimpleYeastDAOImpl implements IGenericDao<SimpleLevure> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<SimpleLevure> getAllDistinctElements() {
-
-		Transaction tx = session.beginTransaction();
 		List<SimpleLevure> result = new ArrayList<SimpleLevure>();
 
-		try {
-			result = session.createQuery("from SimpleLevure group by ing_desc").list();
-			tx.commit();
-
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			tx.rollback();
-		}
-		finally {
-			HibernateUtil.closeSession();
-		}
+		result = session.createQuery("from SimpleLevure group by ing_desc")
+				.list();
+		HibernateUtil.closeSession();
 		return result;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<SimpleLevure> getAllElements() {
-		Transaction tx = session.beginTransaction();
 
 		long resultId;
 		List<SimpleLevure> result = new ArrayList<SimpleLevure>();
-		try {
-			
-			result = (List<SimpleLevure>) session.createQuery("from SimpleLevure").list();
-
-			tx.commit();
-
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			tx.rollback();
-		}
-		finally {
-			HibernateUtil.closeSession();
-		}	
+		result = (List<SimpleLevure>) session.createQuery("from SimpleLevure")
+				.list();
+		HibernateUtil.closeSession();
 		return result;
 	}
 
@@ -97,8 +76,7 @@ public class SimpleYeastDAOImpl implements IGenericDao<SimpleLevure> {
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			tx.rollback();
-		}
-		finally {
+		} finally {
 			HibernateUtil.closeSession();
 		}
 		return result;
@@ -119,8 +97,7 @@ public class SimpleYeastDAOImpl implements IGenericDao<SimpleLevure> {
 			} catch (HibernateException e) {
 				e.printStackTrace();
 				tx.rollback();
-			}
-			finally {
+			} finally {
 				HibernateUtil.closeSession();
 			}
 		} else {
@@ -130,8 +107,7 @@ public class SimpleYeastDAOImpl implements IGenericDao<SimpleLevure> {
 			} catch (HibernateException | DAOException e) {
 				e.printStackTrace();
 				tx.rollback();
-			}
-			finally {
+			} finally {
 				HibernateUtil.closeSession();
 			}
 		}

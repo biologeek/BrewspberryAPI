@@ -33,41 +33,25 @@ public class SimpleHopDaoImpl implements IGenericDao<SimpleHoublon> {
 	@Override
 	public List<SimpleHoublon> getAllDistinctElements() {
 
-		Transaction tx = session.beginTransaction();
 		List<SimpleHoublon> result = new ArrayList<SimpleHoublon>();
 
-		try {
-			result = session.createQuery("from SimpleHoublon group by ing_desc").list();
-			tx.commit();
-
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			tx.rollback();
-		}
-		finally {
-			HibernateUtil.closeSession();
-		}
+		result = session.createQuery("from SimpleHoublon group by ing_desc")
+				.list();
+		HibernateUtil.closeSession();
 		return result;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<SimpleHoublon> getAllElements() {
-		return (List<SimpleHoublon>) session.createQuery("from SimpleHoublon").list();
+		return (List<SimpleHoublon>) session.createQuery("from SimpleHoublon")
+				.list();
 	}
 
 	@Override
 	public SimpleHoublon getElementById(long arg0) {
-		Transaction tx = session.beginTransaction();
 		SimpleHoublon result = new SimpleHoublon();
-		try {	
-			result = (SimpleHoublon) session.get(SimpleHoublon.class, arg0);
-			tx.commit();
-		}catch(HibernateException e){
-			e.printStackTrace();
-			tx.rollback();
-		}
-		session.evict(result);
+		result = (SimpleHoublon) session.get(SimpleHoublon.class, arg0);
 		HibernateUtil.closeSession();
 		return result;
 	}
@@ -84,8 +68,7 @@ public class SimpleHopDaoImpl implements IGenericDao<SimpleHoublon> {
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			tx.rollback();
-		}
-		finally {
+		} finally {
 			HibernateUtil.closeSession();
 		}
 		return result;
@@ -106,8 +89,7 @@ public class SimpleHopDaoImpl implements IGenericDao<SimpleHoublon> {
 			} catch (HibernateException e) {
 				e.printStackTrace();
 				tx.rollback();
-			}
-			finally {
+			} finally {
 				HibernateUtil.closeSession();
 			}
 		} else {
@@ -117,8 +99,7 @@ public class SimpleHopDaoImpl implements IGenericDao<SimpleHoublon> {
 			} catch (HibernateException | DAOException e) {
 				e.printStackTrace();
 				tx.rollback();
-			}
-			finally {
+			} finally {
 				HibernateUtil.closeSession();
 			}
 		}
@@ -127,11 +108,13 @@ public class SimpleHopDaoImpl implements IGenericDao<SimpleHoublon> {
 
 	@Override
 	public SimpleHoublon getElementByName(String name) {
-		
-		SimpleHoublon result = (SimpleHoublon) session.createQuery("from SimpleHoublon where hbl_variete = '"+name+"'").uniqueResult();
+
+		SimpleHoublon result = (SimpleHoublon) session.createQuery(
+				"from SimpleHoublon where hbl_variete = '" + name + "'")
+				.uniqueResult();
 
 		HibernateUtil.closeSession();
 		return result;
-		
+
 	}
 }

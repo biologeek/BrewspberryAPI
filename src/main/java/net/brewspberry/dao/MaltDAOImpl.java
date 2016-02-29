@@ -35,8 +35,7 @@ public class MaltDAOImpl implements IGenericDao<Malt> {
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			tx.rollback();
-		}
-		finally {
+		} finally {
 			HibernateUtil.closeSession();
 		}
 		return result;
@@ -57,8 +56,7 @@ public class MaltDAOImpl implements IGenericDao<Malt> {
 			} catch (HibernateException e) {
 				e.printStackTrace();
 				tx.rollback();
-			}
-			finally {
+			} finally {
 				HibernateUtil.closeSession();
 			}
 		} else {
@@ -68,8 +66,7 @@ public class MaltDAOImpl implements IGenericDao<Malt> {
 			} catch (HibernateException | DAOException e) {
 				e.printStackTrace();
 				tx.rollback();
-			}
-			finally {
+			} finally {
 				HibernateUtil.closeSession();
 			}
 		}
@@ -83,29 +80,20 @@ public class MaltDAOImpl implements IGenericDao<Malt> {
 
 		HibernateUtil.closeSession();
 		return malt;
-		
+
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Malt> getAllElements() {
-		Transaction tx = session.beginTransaction();
 
 		long resultId;
 		List<Malt> result = new ArrayList<Malt>();
-		try {
-			
-			result = (List<Malt>) session.createQuery("from Malt").list();
 
-			tx.commit();
+		result = (List<Malt>) session.createQuery("from Malt").list();
 
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			tx.rollback();
-		}
-		finally {
-			HibernateUtil.closeSession();
-		}	
+		HibernateUtil.closeSession();
+
 		return result;
 	}
 
@@ -119,8 +107,7 @@ public class MaltDAOImpl implements IGenericDao<Malt> {
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			tx.rollback();
-		}
-		finally {
+		} finally {
 			HibernateUtil.closeSession();
 		}
 	}
@@ -131,30 +118,16 @@ public class MaltDAOImpl implements IGenericDao<Malt> {
 
 		HibernateUtil.closeSession();
 
-
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Malt> getAllDistinctElements() {
-		Transaction tx = session.beginTransaction();
 
 		List<Malt> result = new ArrayList<Malt>();
-		try {
-			
-			
-			result = session.createQuery("from Malt group by ing_desc").list();
-			
-			
-			tx.commit();
+		result = session.createQuery("from Malt group by ing_desc").list();
 
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			tx.rollback();
-		}
-		finally {
-			HibernateUtil.closeSession();
-		}
+		HibernateUtil.closeSession();
 
 		return result;
 	}

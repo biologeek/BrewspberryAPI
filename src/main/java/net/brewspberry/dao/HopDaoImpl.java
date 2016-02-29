@@ -34,20 +34,10 @@ public class HopDaoImpl implements IGenericDao<Houblon> {
 	@Override
 	public List<Houblon> getAllDistinctElements() {
 
-		Transaction tx = session.beginTransaction();
 		List<Houblon> result = new ArrayList<Houblon>();
 
-		try {
-			result = session.createQuery("from Houblon group by ing_desc").list();
-			tx.commit();
-
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			tx.rollback();
-		}
-		finally {
-			HibernateUtil.closeSession();
-		}
+		result = session.createQuery("from Houblon group by ing_desc").list();
+		HibernateUtil.closeSession();
 		return result;
 	}
 
@@ -59,16 +49,9 @@ public class HopDaoImpl implements IGenericDao<Houblon> {
 
 	@Override
 	public Houblon getElementById(long arg0) {
-		Transaction tx = session.beginTransaction();
 		Houblon result = new Houblon();
-		try {	
-			result = (Houblon) session.get(Houblon.class, arg0);
-			tx.commit();
-		}catch(HibernateException e){
-			e.printStackTrace();
-			tx.rollback();
-		}
-		session.evict(result);
+
+		result = (Houblon) session.get(Houblon.class, arg0);
 		HibernateUtil.closeSession();
 		return result;
 	}
@@ -85,8 +68,7 @@ public class HopDaoImpl implements IGenericDao<Houblon> {
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			tx.rollback();
-		}
-		finally {
+		} finally {
 			HibernateUtil.closeSession();
 		}
 		return result;
@@ -107,8 +89,7 @@ public class HopDaoImpl implements IGenericDao<Houblon> {
 			} catch (HibernateException e) {
 				e.printStackTrace();
 				tx.rollback();
-			}
-			finally {
+			} finally {
 				HibernateUtil.closeSession();
 			}
 		} else {
@@ -118,8 +99,7 @@ public class HopDaoImpl implements IGenericDao<Houblon> {
 			} catch (HibernateException | DAOException e) {
 				e.printStackTrace();
 				tx.rollback();
-			}
-			finally {
+			} finally {
 				HibernateUtil.closeSession();
 			}
 		}
@@ -128,11 +108,13 @@ public class HopDaoImpl implements IGenericDao<Houblon> {
 
 	@Override
 	public Houblon getElementByName(String name) {
-		
-		Houblon result = (Houblon) session.createQuery("from Houblon where hbl_variete = '"+name+"'").uniqueResult();
+
+		Houblon result = (Houblon) session.createQuery(
+				"from Houblon where hbl_variete = '" + name + "'")
+				.uniqueResult();
 
 		HibernateUtil.closeSession();
 		return result;
-		
+
 	}
 }
