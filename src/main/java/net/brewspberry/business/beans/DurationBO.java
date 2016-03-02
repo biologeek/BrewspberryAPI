@@ -59,6 +59,13 @@ public class DurationBO implements Serializable{
 	public void setMilisecond(long milisecond) {
 		this.milisecond = milisecond;
 	}
+
+
+	@Override
+	public String toString() {
+		return  week + "w " + day + "d " + hour
+				+ "h " + minute + "m " + second + "s "+ milisecond + "ms";
+	}
 	
 
 }
