@@ -29,6 +29,9 @@ public class Etape implements Serializable{
     private String etp_nom;
     private Date etp_debut;
     private Date etp_fin;
+    
+    @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+    @JoinColumn(name="dur_step", nullable=true)
     private DurationBO etp_duree;
     private Double etp_temperature_theorique;
     private String etp_remarque;

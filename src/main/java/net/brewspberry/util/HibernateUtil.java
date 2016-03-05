@@ -4,6 +4,7 @@ import net.brewspberry.business.beans.AbstractIngredient;
 import net.brewspberry.business.beans.Actioner;
 import net.brewspberry.business.beans.Biere;
 import net.brewspberry.business.beans.Brassin;
+import net.brewspberry.business.beans.DurationBO;
 import net.brewspberry.business.beans.Etape;
 import net.brewspberry.business.beans.Houblon;
 import net.brewspberry.business.beans.Levure;
@@ -25,8 +26,6 @@ public class HibernateUtil {
 	private static final ThreadLocal<Session> threadLocal = new ThreadLocal<Session>();
 	private static SessionFactory sessionFactory;
 
-	
-
 	static {
 		try {
 			System.out.println("Trying to configure SessionFactory");
@@ -36,25 +35,25 @@ public class HibernateUtil {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static SessionFactory configureSessionFactory() {
 		try {
 			Configuration configuration = new Configuration();
-			configuration.configure()
-				.addAnnotatedClass(Malt.class)
-				.addAnnotatedClass(Houblon.class)
-				.addAnnotatedClass(Levure.class)
-				.addAnnotatedClass(SimpleMalt.class)
-				.addAnnotatedClass(SimpleHoublon.class)
-				.addAnnotatedClass(SimpleLevure.class)
-				.addAnnotatedClass(AbstractIngredient.class)
-				.addAnnotatedClass(Etape.class)
-				.addAnnotatedClass(Biere.class)
-				.addAnnotatedClass(Brassin.class)
-				.addAnnotatedClass(Temperature.class)
-				.addAnnotatedClass(TemperatureMeasurement.class)
-				.addAnnotatedClass(Actioner.class);
-			
+			configuration.configure().addAnnotatedClass(Malt.class)
+					.addAnnotatedClass(Houblon.class)
+					.addAnnotatedClass(Levure.class)
+					.addAnnotatedClass(SimpleMalt.class)
+					.addAnnotatedClass(SimpleHoublon.class)
+					.addAnnotatedClass(SimpleLevure.class)
+					.addAnnotatedClass(AbstractIngredient.class)
+					.addAnnotatedClass(Etape.class)
+					.addAnnotatedClass(Biere.class)
+					.addAnnotatedClass(Brassin.class)
+					.addAnnotatedClass(Temperature.class)
+					.addAnnotatedClass(TemperatureMeasurement.class)
+					.addAnnotatedClass(Actioner.class)
+					.addAnnotatedClass(DurationBO.class);
+
 			sessionFactory = configuration.buildSessionFactory();
 
 		} catch (Exception e) {
@@ -63,7 +62,6 @@ public class HibernateUtil {
 		}
 		return sessionFactory;
 	}
-
 
 	private HibernateUtil() {
 	}

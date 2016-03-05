@@ -2,6 +2,13 @@ package net.brewspberry.business.beans;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
+@Entity
 public class DurationBO implements Serializable{
 	
 	
@@ -9,12 +16,17 @@ public class DurationBO implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 3610500240459984835L;
+	@Id@GeneratedValue
+	private long dur_id;
 	private long week;
 	private long day;
 	private long hour;
 	private long minute;
 	private long second;
 	private long milisecond;
+	
+	@OneToOne(fetch=FetchType.LAZY, mappedBy="etp_duration_id")
+	private Etape dur_step;
 	
 	
 	public DurationBO() {
@@ -58,6 +70,31 @@ public class DurationBO implements Serializable{
 	}
 	public void setMilisecond(long milisecond) {
 		this.milisecond = milisecond;
+	}
+
+
+	public long getDur_id() {
+		return dur_id;
+	}
+
+
+	public void setDur_id(long dur_id) {
+		this.dur_id = dur_id;
+	}
+
+
+	public Etape getDur_step() {
+		return dur_step;
+	}
+
+
+	public void setDur_step(Etape dur_step) {
+		this.dur_step = dur_step;
+	}
+
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 

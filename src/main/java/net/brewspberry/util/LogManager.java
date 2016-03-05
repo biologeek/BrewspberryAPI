@@ -18,6 +18,8 @@ public class LogManager {
 
 	public static Logger getInstance(String name){
 		
+		Level newLevel = Level.parse(ConfigLoader.getConfigByKey(Constants.CONFIG_PROPERTIES, "param.logger.level"));
+		
 		if (logger == null){
 			handler = new ConsoleHandler();
 			try {
@@ -30,6 +32,7 @@ public class LogManager {
 				e.printStackTrace();
 			}
 			logger = Logger.getLogger(name);
+			logger.setLevel(newLevel);
 			logger.addHandler(handler);
 			
 		}

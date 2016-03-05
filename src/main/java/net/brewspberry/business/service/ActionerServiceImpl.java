@@ -49,7 +49,7 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 	IGenericDao<Actioner> actionerDao = new ActionerDaoImpl();
 	ISpecificActionerDao actionerSpecDao = new ActionerDaoImpl();
 
-	Batch temperatureBatch = new BatchRecordTemperatures();
+	Batch temperatureBatch;
 	Thread recordTemperatureBatch;
 
 	String getTemperatureRunningGrep = "ps -ef | grep bchrectemp.py";
@@ -269,6 +269,7 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 
 		if (actioner != null) {
 
+			logger.fine(actioner.getAct_etape()+ " "+actioner.getAct_brassin());
 			switch (actioner.getAct_type()) {
 
 			case "1":
@@ -287,8 +288,8 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 
 				logger.info("It's a DS18B20 :");
 				try {
-					if (actioner.getAct_brassin() == null
-							&& actioner.getAct_etape() == null) {
+					if (actioner.getAct_brassin() != null
+							&& actioner.getAct_etape() != null) {
 
 						currentStep = actioner.getAct_etape();
 
@@ -315,7 +316,6 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 
 						temperatureBatch = new BatchRecordTemperatures(args);
 
-						temperatureBatch.setBatchParams(args);
 
 						recordTemperatureBatch = new Thread(
 								(Runnable) temperatureBatch);
