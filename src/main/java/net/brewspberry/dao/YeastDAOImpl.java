@@ -39,20 +39,11 @@ public class YeastDAOImpl implements IGenericDao<Levure> {
 	@Override
 	public List<Levure> getAllDistinctElements() {
 
-		Transaction tx = session.beginTransaction();
 		List<Levure> result = new ArrayList<Levure>();
 
-		try {
-			result = session.createQuery("from Levure group by ing_desc").list();
-			tx.commit();
+		result = session.createQuery("from Levure group by ing_desc").list();
 
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			tx.rollback();
-		}
-		finally {
-			HibernateUtil.closeSession();
-		}
+		HibernateUtil.closeSession();
 		return result;
 	}
 
@@ -64,7 +55,7 @@ public class YeastDAOImpl implements IGenericDao<Levure> {
 		long resultId;
 		List<Levure> result = new ArrayList<Levure>();
 		try {
-			
+
 			result = (List<Levure>) session.createQuery("from Levure").list();
 
 			tx.commit();
@@ -72,10 +63,9 @@ public class YeastDAOImpl implements IGenericDao<Levure> {
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			tx.rollback();
-		}
-		finally {
+		} finally {
 			HibernateUtil.closeSession();
-		}	
+		}
 		return result;
 	}
 
@@ -99,8 +89,7 @@ public class YeastDAOImpl implements IGenericDao<Levure> {
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			tx.rollback();
-		}
-		finally {
+		} finally {
 			HibernateUtil.closeSession();
 		}
 		return result;
@@ -121,8 +110,7 @@ public class YeastDAOImpl implements IGenericDao<Levure> {
 			} catch (HibernateException e) {
 				e.printStackTrace();
 				tx.rollback();
-			}
-			finally {
+			} finally {
 				HibernateUtil.closeSession();
 			}
 		} else {
@@ -132,8 +120,7 @@ public class YeastDAOImpl implements IGenericDao<Levure> {
 			} catch (HibernateException | DAOException e) {
 				e.printStackTrace();
 				tx.rollback();
-			}
-			finally {
+			} finally {
 				HibernateUtil.closeSession();
 			}
 		}

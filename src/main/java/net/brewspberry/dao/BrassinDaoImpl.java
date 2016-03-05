@@ -53,19 +53,12 @@ public class BrassinDaoImpl implements IGenericDao<Brassin>,
 			} catch (HibernateException e) {
 				tx.rollback();
 				return new Brassin();
+			}finally {
+				HibernateUtil.closeSession();
 			}
 		}
-		try {
-			long id = (long) session.save(arg0);
-			tx.commit();
-			arg0.setBra_id(id);
-			return arg0;
-		} catch (HibernateException e) {
-			tx.rollback();
-			return new Brassin();
-		} finally {
-			HibernateUtil.closeSession();
-		}
+		return new Brassin();
+		
 	}
 
 	@Override
@@ -92,6 +85,17 @@ public class BrassinDaoImpl implements IGenericDao<Brassin>,
 
 	@Override
 	public void deleteElement(long id) {
+		Transaction tx = session.beginTransaction();
+		
+		Brassin brassin = this.getElementById(id);
+		
+		try{
+			session.delete(brassin);
+			
+		} catch (HibernateException e){
+			
+			e.printStackTrace();
+		}
 
 	}
 
@@ -109,10 +113,16 @@ public class BrassinDaoImpl implements IGenericDao<Brassin>,
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Brassin> getAllDistinctElements() {
-		// TODO Auto-generated method stub
-		return null;
+
+		List<Brassin> result = new ArrayList<Brassin>();
+		result = session.createQuery("from Brassin group by ing_desc").list();
+
+		HibernateUtil.closeSession();
+
+		return result;
 	}
 
 	@Override

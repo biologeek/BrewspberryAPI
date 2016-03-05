@@ -3,7 +3,6 @@ package net.brewspberry.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Criteria;
 import org.hibernate.Transaction;
 import org.hibernate.Session;
 
@@ -84,9 +83,7 @@ public class EtapeDaoImpl implements IGenericDao<Etape> {
 	public List<Etape> getAllDistinctElements() {
 
 		List<Etape> result = new ArrayList<Etape>();
-
-		result = (List<Etape>) session.createQuery("from Etape")
-				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+		result = session.createQuery("from Etape group by etp_nom").list();
 
 		HibernateUtil.closeSession();
 

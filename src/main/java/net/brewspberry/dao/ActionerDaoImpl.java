@@ -68,25 +68,59 @@ public class ActionerDaoImpl implements IGenericDao<Actioner>,
 
 	@Override
 	public Actioner getElementByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Actioner result = new Actioner();
+		session = HibernateUtil.getSession();
+		result = (Actioner) session.createQuery("from Actioner where act_nom = "+name).uniqueResult();
+		HibernateUtil.closeSession();
+		return result;
 	}
 
 	@Override
 	public List<Actioner> getAllElements() {
-		// TODO Auto-generated method stub
-		return null;
+		
+
+		return (List<Actioner>) session.createQuery("from Actioner");
 	}
 
 	@Override
 	public void deleteElement(long id) {
-		// TODO Auto-generated method stub
+		
+		Transaction tx = session.beginTransaction();
+		Actioner toDel = new Actioner();
+		
+		try {
+			
+			toDel = this.getElementById(id);
+			
+			session.delete(toDel);
+			tx.commit();
+			
+		} catch (HibernateException e){
+			
+			tx.rollback();
+			e.printStackTrace();
+		}
 
 	}
 
 	@Override
 	public void deleteElement(Actioner arg0) {
-		// TODO Auto-generated method stub
+		Transaction tx = session.beginTransaction();
+		
+		
+		try {
+			
+			session.delete(arg0);
+			tx.commit();
+			
+		} catch (HibernateException e){
+			
+			tx.rollback();
+			e.printStackTrace();
+		}
+
+		
 
 	}
 

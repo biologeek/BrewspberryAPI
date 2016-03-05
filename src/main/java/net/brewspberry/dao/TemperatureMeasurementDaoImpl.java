@@ -1,5 +1,6 @@
 package net.brewspberry.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -15,6 +16,7 @@ import org.hibernate.criterion.Restrictions;
 
 import net.brewspberry.business.IGenericDao;
 import net.brewspberry.business.ISpecificTemperatureMeasurementService;
+import net.brewspberry.business.beans.Brassin;
 import net.brewspberry.business.beans.Etape;
 import net.brewspberry.business.beans.TemperatureMeasurement;
 import net.brewspberry.exceptions.DAOException;
@@ -163,6 +165,9 @@ public class TemperatureMeasurementDaoImpl implements
 			
 			tx.rollback();
 			e.printStackTrace();
+		} finally {
+			HibernateUtil.closeSession();
+
 		}
 
 		
@@ -205,10 +210,16 @@ public class TemperatureMeasurementDaoImpl implements
 		
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<TemperatureMeasurement> getAllDistinctElements() {
-		// TODO Auto-generated method stub
-		return null;
+
+		List<TemperatureMeasurement> result = new ArrayList<TemperatureMeasurement>();
+		result = session.createQuery("from TemperatureMeasurement group by tmes_probe_name").list();
+
+		HibernateUtil.closeSession();
+
+		return result;
 	}
 
 }

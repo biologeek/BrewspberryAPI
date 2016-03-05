@@ -44,8 +44,10 @@ public class SimpleHopDaoImpl implements IGenericDao<SimpleHoublon> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<SimpleHoublon> getAllElements() {
-		return (List<SimpleHoublon>) session.createQuery("from SimpleHoublon")
+		List<SimpleHoublon> result = (List<SimpleHoublon>) session.createQuery("from SimpleHoublon")
 				.list();
+		HibernateUtil.closeSession();
+		return result;
 	}
 
 	@Override

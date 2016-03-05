@@ -11,12 +11,16 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.hibernate.engine.jdbc.batch.internal.BatchBuilderImpl;
+
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 
 import net.brewspberry.adapter.RelayAdapter;
+import net.brewspberry.batches.launchers.Batch;
+import net.brewspberry.batches.launchers.BatchRecordTemperatures;
 import net.brewspberry.business.IGenericDao;
 import net.brewspberry.business.IGenericService;
 import net.brewspberry.business.ISpecificActionerDao;
@@ -44,6 +48,9 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 
 	IGenericDao<Actioner> actionerDao = new ActionerDaoImpl();
 	ISpecificActionerDao actionerSpecDao = new ActionerDaoImpl();
+
+	Batch temperatureBatch = new BatchRecordTemperatures();
+	Thread recordTemperatureBatch;
 
 	String getTemperatureRunningGrep = "ps -ef | grep bchrectemp.py";
 
@@ -247,15 +254,18 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 	}
 
 	/**
-	 * startAction starts device for selected Actioner - ds18b20 : launches
-	 * Python script that collects and stores temperatures measured by ds18b20s
-	 * - relays : starting action means setting PinState to HIGH thus running
-	 * the device
+	 * startAction starts device for selected Actioner - ds18b20 : launches Java
+	 * batch that collects and stores temperatures measured by ds18b20s - relays
+	 * : starting action means setting PinState to HIGH thus running the device
 	 * 
 	 * It also stores the Actioner in database
 	 */
 	@Override
 	public Actioner startAction(Actioner actioner) throws Exception {
+
+		Etape currentStep = null;
+		String duration = "";
+		String[] args = new String[5];
 
 		if (actioner != null) {
 
@@ -265,45 +275,62 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 				// DS18B20
 
 				/*
-				 * When loading ds18b20, it executes python script that collects
-				 * temperature data
+				 * When loading ds18b20, it executes in a separate thread a time
+				 * limited batch to record temperatures
 				 * 
 				 * Requires act_type, act_brassin, act_etape, name, uuid
 				 */
 
-				logger.info("It's an DS18B20 :");
-				File f = new File(ConfigLoader.getConfigByKey(
+				String durationCoef = ConfigLoader.getConfigByKey(
 						Constants.CONFIG_PROPERTIES,
-						"files.measurement.python.script"));
+						"param.batches.length.coef");
 
-				if (f.exists() && !f.isDirectory()) {
+				logger.info("It's a DS18B20 :");
+				try {
+					if (actioner.getAct_brassin() == null
+							&& actioner.getAct_etape() == null) {
 
-					try {
-						if (actioner.getAct_brassin() == null || actioner.getAct_etape() == null){
-							
-							Runtime.getRuntime().exec(
-									"/usr/bin/python " + f.getAbsolutePath()+" &");
-							
-						}
-						else {
-							// Starts python job and saves action in DB
+						currentStep = actioner.getAct_etape();
 
-							Runtime.getRuntime().exec(
-									"/usr/bin/python " + f.getAbsolutePath() + " "
-											+ actioner.getAct_brassin().getBra_id()
-											+ " "
-											+ actioner.getAct_etape().getEtp_id()
-											+ " " + actioner.getAct_id() + " &");
-							
-							actioner = this.startActionInDatabase(actioner);
-						}
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						/*
+						 * Duration of step converted in Minutes * Coefficient =
+						 * recommended time In case thread is not finished at
+						 * the end of real step, a security mechanism is to
+						 * interrupt it.
+						 * 
+						 * Is implemented in
+						 * 
+						 * @see stopActionInDatabase
+						 */
+
+						duration = String.valueOf((double) currentStep
+								.getEtp_duree().getMinute()
+								* (Double.parseDouble(durationCoef)));
+
+						args[0] = "MINUTE";
+						args[0] = String.valueOf(duration);
+						args[0] = String.valueOf(actioner.getAct_brassin());
+						args[0] = String.valueOf(actioner.getAct_etape());
+						args[0] = String.valueOf(actioner.getAct_id());
+
+						temperatureBatch = new BatchRecordTemperatures(args);
+
+						temperatureBatch.setBatchParams(args);
+
+						recordTemperatureBatch = new Thread(
+								(Runnable) temperatureBatch);
+
+						recordTemperatureBatch.start();
+
+					} else {
+
+						logger.warning("TemperatureMeasurement not available without Step and Brew...");
 					}
-				} else {
-					throw new Exception("File " + f.getAbsolutePath()
-							+ " not found");
+
+				} catch (Throwable e) {
+
+					e.printStackTrace();
+					// TODO: handle exception
 				}
 
 				break;
@@ -321,14 +348,17 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 							+ Constants.BREW_GPIO.get(actioner
 									.getAct_raspi_pin()));
 					try {
-						
+
 						// Turning ON or OFF the pin
 						relayAdapter.changePinState(Constants.BREW_GPIO
 								.get(actioner.getAct_raspi_pin()),
 								PinState.HIGH);
-						
+
 						actioner.setAct_status(Constants.ACT_RUNNING);
-						logger.fine("Actioner at pin "+ actioner.getAct_raspi_pin()+" changed state to "+actioner.getAct_status());
+						logger.fine("Actioner at pin "
+								+ actioner.getAct_raspi_pin()
+								+ " changed state to "
+								+ actioner.getAct_status());
 
 					} catch (Exception e) {
 
@@ -337,11 +367,9 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 								+ ", setting status to FAILED !");
 						actioner.setAct_status(Constants.ACT_FAILED);
 
-
 					}
 					actioner = this.startActionInDatabase(actioner);
 
-					
 				} else {
 					throw new Exception("Empty Pin !!");
 				}
@@ -380,94 +408,129 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 	public Actioner stopAction(Actioner actioner) throws Exception {
 		if (actioner != null && actioner.getAct_id() != 0) {
 
-			switch (actioner.getAct_type()) {
+			if (ConfigLoader.getConfigByKey(Constants.CONFIG_PROPERTIES,
+					"param.batches.language") == "java") {
 
-			case "1":
+				if (recordTemperatureBatch != null) {
 
-				// ds18b20
+					if (recordTemperatureBatch.isAlive()) {
 
-				
-				//First, checks if a process is currently running 
-				Process proc = null;
-				try {
-					proc = Runtime.getRuntime().exec(getTemperatureRunningGrep);
-				} catch (IOException e) {
-					e.printStackTrace();
+						recordTemperatureBatch.interrupt();
+
+						this.stopActionInDatabase(actioner);
+
+						// Wait for it to end
+						recordTemperatureBatch.join();
+
+					} else {
+						logger.info("Thread is dead");
+
+					}
+
+				} else {
+					logger.severe("Thread is null !!");
 				}
 
-				BufferedReader br = new BufferedReader(new InputStreamReader(
-						proc.getInputStream()));
+			} else if (ConfigLoader.getConfigByKey(Constants.CONFIG_PROPERTIES,
+					"param.batches.language") == "python") {
+				switch (actioner.getAct_type()) {
 
-				String line = null;
+				case "1":
 
-				int counter = 0;
-				while ((line = br.readLine()) != null) {
+					// ds18b20
 
-					// Checks if it is really the running batch
-					if (line.matches(commandLineRegexp)) {
+					// First, checks if a process is currently running
+					Process proc = null;
+					try {
+						proc = Runtime.getRuntime().exec(
+								getTemperatureRunningGrep);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 
-						System.out.println("Matching process found !");
+					BufferedReader br = new BufferedReader(
+							new InputStreamReader(proc.getInputStream()));
 
-						/*
-						 * Returns PID of program using bra_id, etape_id and act_id 
-						 * So no way we kill the wrong process
-						 */
-						String pid = this.getPIDFromPs("bchrectemp.py "
-								+ actioner.getAct_brassin().getBra_id() + " "
-								+ actioner.getAct_etape().getEtp_id()) + " "
-								+ actioner.getAct_id();
+					String line = null;
 
-						if (pid != "") {
-							
-							// Kills the process !
-							Runtime.getRuntime().exec("kill -SIGTERM " + pid);
-							counter++;
+					int counter = 0;
+					while ((line = br.readLine()) != null) {
+
+						// Checks if it is really the running batch
+						if (line.matches(commandLineRegexp)) {
+
+							System.out.println("Matching process found !");
+
+							/*
+							 * Returns PID of program using bra_id, etape_id and
+							 * act_id So no way we kill the wrong process
+							 */
+							String pid = this
+									.getPIDFromPs("bchrectemp.py "
+											+ actioner.getAct_brassin()
+													.getBra_id()
+											+ " "
+											+ actioner.getAct_etape()
+													.getEtp_id())
+									+ " " + actioner.getAct_id();
+
+							if (pid != "") {
+
+								// Kills the process !
+								Runtime.getRuntime().exec(
+										"kill -SIGTERM " + pid);
+								counter++;
+							}
+
+							// records in DB
+
+							actioner = this.stopActionInDatabase(actioner);
 						}
-						
-						//records in DB 
-
-						actioner = this.stopActionInDatabase(actioner);
-					}
-				}
-
-				break;
-
-			case "2":
-
-				// Relay
-
-				if (actioner.getAct_raspi_pin() != null) {
-
-					GpioPinDigitalOutput gpio = gpioController
-							.provisionDigitalOutputPin(Constants.BREW_GPIO
-									.get(actioner.getAct_raspi_pin()));
-
-					if (gpio.getState() == PinState.HIGH) {
-
-						gpio.setState(PinState.LOW);
-
-					// Not recording relay actions as therre may be more than one
-					//	actioner = this.stopActionInDatabase(actioner);
 					}
 
-				}
-				break;
+					break;
 
+				case "2":
+
+					// Relay
+
+					if (actioner.getAct_raspi_pin() != null) {
+
+						GpioPinDigitalOutput gpio = gpioController
+								.provisionDigitalOutputPin(Constants.BREW_GPIO
+										.get(actioner.getAct_raspi_pin()));
+
+						if (gpio.getState() == PinState.HIGH) {
+
+							gpio.setState(PinState.LOW);
+
+							// Not recording relay actions as therre may be more
+							// than one
+							// actioner = this.stopActionInDatabase(actioner);
+						}
+
+					}
+					break;
+
+				}
+
+			} else {
+
+				logger.severe("Actioner ID is null, can't stop null actioner !!");
+				throw new Exception();
 			}
+		} else {
 
-		}
-		else {
-			
-			logger.severe("Actioner ID is null, can't stop null actioner !!");
-			throw new Exception();
+			logger.warning("Unknown language");
+
 		}
 		return actioner;
 
 	}
 
 	/**
-	 * This method returns PIDs for line command
-	 * Greps over line parameter, deletes grep search process and display PID (2nd column)
+	 * This method returns PIDs for line command Greps over line parameter,
+	 * deletes grep search process and display PID (2nd column)
 	 * 
 	 * @param line
 	 * @return If the process exists, return PID as String, else empty String
@@ -495,25 +558,110 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 
 		return result;
 	}
-	
+
 	/**
 	 * This method checks in DB whether Actioner is already activated or not.
-	 *	
+	 *
 	 * searches on brew, step, uuid and type
 	 * 
 	 * 
 	 * @param arg0
-	 * @return stored Actioner if exists, arg0 else 
+	 * @return stored Actioner if exists, arg0 else
 	 */
-	public Actioner isAlreadyStoredAndActivated (Actioner arg0){
+	public Actioner isAlreadyStoredAndActivated(Actioner arg0) {
 		Actioner result = null;
-		
-		if (arg0 != null){
-			
+
+		if (arg0 != null) {
+
 			result = actionerSpecDao.getActionerByFullCharacteristics(arg0);
-		
+
 		}
-		
-		return arg0;		
+
+		return arg0;
+	}
+
+	/**
+	 * Joins threads
+	 * 
+	 * @throws InterruptedException
+	 */
+	public void joinThreads() throws InterruptedException {
+
+		if (recordTemperatureBatch != null) {
+			recordTemperatureBatch.join();
+		}
+
+	}
+
+	public String getCommandLineRegexp() {
+		return commandLineRegexp;
+	}
+
+	public void setCommandLineRegexp(String commandLineRegexp) {
+		this.commandLineRegexp = commandLineRegexp;
+	}
+
+	public Pattern getPattern() {
+		return pattern;
+	}
+
+	public void setPattern(Pattern pattern) {
+		this.pattern = pattern;
+	}
+
+	public IGenericDao<Actioner> getActionerDao() {
+		return actionerDao;
+	}
+
+	public void setActionerDao(IGenericDao<Actioner> actionerDao) {
+		this.actionerDao = actionerDao;
+	}
+
+	public ISpecificActionerDao getActionerSpecDao() {
+		return actionerSpecDao;
+	}
+
+	public void setActionerSpecDao(ISpecificActionerDao actionerSpecDao) {
+		this.actionerSpecDao = actionerSpecDao;
+	}
+
+	public Batch getTemperatureBatch() {
+		return temperatureBatch;
+	}
+
+	public void setTemperatureBatch(Batch temperatureBatch) {
+		this.temperatureBatch = temperatureBatch;
+	}
+
+	public Thread getRecordTemperatureBatch() {
+		return recordTemperatureBatch;
+	}
+
+	public void setRecordTemperatureBatch(Thread recordTemperatureBatch) {
+		this.recordTemperatureBatch = recordTemperatureBatch;
+	}
+
+	public String getGetTemperatureRunningGrep() {
+		return getTemperatureRunningGrep;
+	}
+
+	public void setGetTemperatureRunningGrep(String getTemperatureRunningGrep) {
+		this.getTemperatureRunningGrep = getTemperatureRunningGrep;
+	}
+
+	public RelayAdapter getRelayAdapter() {
+		return relayAdapter;
+	}
+
+	public void setRelayAdapter(RelayAdapter relayAdapter) {
+		this.relayAdapter = relayAdapter;
+	}
+
+	public static Logger getLogger() {
+		return logger;
+	}
+
+	public GpioController getGpioController() {
+		return gpioController;
 	}
 }
