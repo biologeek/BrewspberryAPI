@@ -269,7 +269,8 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 
 		if (actioner != null) {
 
-			logger.fine(actioner.getAct_etape()+ " "+actioner.getAct_brassin());
+			logger.fine(actioner.getAct_etape() + " "
+					+ actioner.getAct_brassin());
 			switch (actioner.getAct_type()) {
 
 			case "1":
@@ -287,6 +288,10 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 						"param.batches.length.coef");
 
 				logger.info("It's a DS18B20 :");
+
+
+				logger.fine("Duree : " + currentStep.getEtp_duree());
+				logger.fine("Duree");
 				try {
 					if (actioner.getAct_brassin() != null
 							&& actioner.getAct_etape() != null) {
@@ -315,7 +320,6 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 						args[0] = String.valueOf(actioner.getAct_id());
 
 						temperatureBatch = new BatchRecordTemperatures(args);
-
 
 						recordTemperatureBatch = new Thread(
 								(Runnable) temperatureBatch);

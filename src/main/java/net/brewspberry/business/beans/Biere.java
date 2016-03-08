@@ -20,7 +20,7 @@ public class Biere  implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -8568385997181631075L;
-	@Id@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id@GeneratedValue(strategy=GenerationType.AUTO)
 	private long beer_id;
 	private String beer_name;
 	private String beer_style;

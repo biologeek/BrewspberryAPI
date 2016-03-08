@@ -23,15 +23,14 @@ public class Etape implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -1849499413089750093L;
-	@Id@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long etp_id;
 	private Integer etp_numero; // step number in the brew
     private String etp_nom;
     private Date etp_debut;
     private Date etp_fin;
     
-    @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-    @JoinColumn(name="dur_step", nullable=true)
+    @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="dur_step")
     private DurationBO etp_duree;
     private Double etp_temperature_theorique;
     private String etp_remarque;

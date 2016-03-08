@@ -7,6 +7,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 @Entity
 public class DurationBO implements Serializable{
@@ -25,7 +26,8 @@ public class DurationBO implements Serializable{
 	private long second;
 	private long milisecond;
 	
-	@OneToOne(fetch=FetchType.LAZY, mappedBy="etp_duration_id")
+	@OneToOne(fetch=FetchType.LAZY)
+	@PrimaryKeyJoinColumn
 	private Etape dur_step;
 	
 	
