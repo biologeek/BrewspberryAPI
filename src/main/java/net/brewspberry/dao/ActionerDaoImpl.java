@@ -52,7 +52,21 @@ public class ActionerDaoImpl implements IGenericDao<Actioner>,
 
 	@Override
 	public Actioner update(Actioner arg0) {
-		// TODO Auto-generated method stub
+		Transaction tx = session.beginTransaction();
+		
+		try {
+			
+			session.update (arg0);
+			tx.commit();
+			
+		} catch (HibernateException e){
+			
+			e.printStackTrace();
+			tx.rollback();
+			
+		} finally {
+			HibernateUtil.closeSession();
+		}
 		return null;
 	}
 
@@ -126,8 +140,8 @@ public class ActionerDaoImpl implements IGenericDao<Actioner>,
 
 	@Override
 	public List<Actioner> getAllDistinctElements() {
-		// TODO Auto-generated method stub
-		return null;
+
+		return (List<Actioner>) session.createQuery("from Actioner");
 	}
 
 	@Override

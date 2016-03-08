@@ -116,8 +116,13 @@ public class SimpleYeastDAOImpl implements IGenericDao<SimpleLevure> {
 
 	@Override
 	public SimpleLevure getElementByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
+
+		SimpleLevure result = (SimpleLevure) session.createQuery(
+				"from SimpleLevure where ing_desc = '" + name + "'")
+				.uniqueResult();
+
+		HibernateUtil.closeSession();
+		return result;
 	}
 
 }

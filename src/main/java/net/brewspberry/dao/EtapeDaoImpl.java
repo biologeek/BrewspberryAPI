@@ -68,14 +68,33 @@ public class EtapeDaoImpl implements IGenericDao<Etape> {
 
 	@Override
 	public void deleteElement(long id) {
-		// TODO Auto-generated method stub
-
+		
+		Transaction tx = session.beginTransaction();
+		
+		try {
+			
+			Etape toDel = session.get(Etape.class, id);
+			session.delete(toDel);
+			tx.commit();			
+		} catch (HibernateException e){
+			e.printStackTrace();
+			tx.rollback();
+		}
+		
 	}
 
 	@Override
 	public void deleteElement(Etape arg0) {
-		// TODO Auto-generated method stub
 
+		Transaction tx = session.beginTransaction();
+		
+		try {
+			session.delete(arg0);
+			tx.commit();			
+		} catch (HibernateException e){
+			e.printStackTrace();
+			tx.rollback();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -100,8 +119,8 @@ public class EtapeDaoImpl implements IGenericDao<Etape> {
 
 	@Override
 	public Etape getElementByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		Etape result = session.createCriteria(Etape.class).add("etp_nom", name).uniqueResult();
+		return result;
 	}
 
 }

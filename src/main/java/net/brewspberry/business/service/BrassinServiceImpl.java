@@ -46,7 +46,7 @@ public class BrassinServiceImpl implements IGenericService<Brassin>,
 
 	@Override
 	public void deleteElement(long id) {
-		// TODO Auto-generated method stub
+		brassinDAO.deleteElement(id);
 
 	}
 

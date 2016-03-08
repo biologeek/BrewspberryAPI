@@ -127,14 +127,14 @@ public class BrassinDaoImpl implements IGenericDao<Brassin>,
 
 	@Override
 	public Brassin getBrassinByBeer(Biere beer) {
-		// TODO Auto-generated method stub
-		return null;
+		Brassin result = session.createCriteria(Brassin.class).add("bra_beer", beer).uniqueResult();
+		return result;
 	}
 
 	@Override
 	public Brassin getElementByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		Brassin result = session.createCriteria(Brassin.class).add("bra_nom", name).uniqueResult();
+		return result;
 	}
 
 }

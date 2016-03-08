@@ -112,7 +112,7 @@ public class SimpleHopDaoImpl implements IGenericDao<SimpleHoublon> {
 	public SimpleHoublon getElementByName(String name) {
 
 		SimpleHoublon result = (SimpleHoublon) session.createQuery(
-				"from SimpleHoublon where hbl_variete = '" + name + "'")
+				"from SimpleHoublon where ing_desc = '" + name + "'")
 				.uniqueResult();
 
 		HibernateUtil.closeSession();

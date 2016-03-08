@@ -133,8 +133,14 @@ public class SimpleMaltDAOImpl implements IGenericDao<SimpleMalt> {
 
 	@Override
 	public SimpleMalt getElementByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
+
+		SimpleHoublon result = (SimpleMalt) session.createQuery(
+				"from SimpleMalt where ing_desc = '" + name + "'")
+				.uniqueResult();
+
+		HibernateUtil.closeSession();
+		return result;
+
 	}
 
 }

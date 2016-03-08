@@ -47,8 +47,8 @@ public class TemperatureMeasurementDaoImpl implements
 	@Override
 	public List<TemperatureMeasurement> getTemperatureMeasurementByEtape(
 			Etape etape) {
-		// TODO Auto-generated method stub
-		return null;
+		List<TemperatureMeasurement> result = session.createCriteria (TemperatureMeasurement.class).add("tmes_etape", etape).list();
+		return result;
 	}
 
 	@Override
@@ -168,45 +168,98 @@ public class TemperatureMeasurementDaoImpl implements
 		} finally {
 			HibernateUtil.closeSession();
 
-		}
-
-		
+		}		
 		return result;
 	}
 
 	@Override
 	public TemperatureMeasurement update(TemperatureMeasurement arg0) {
-		// TODO Auto-generated method stub
-		return null;
+		Transaction tx = session.beginTransaction ();
+		TemperatureMeasurement result = null;
+		
+		try{
+			result = (TemperatureMeasurement) session.update (arg0);
+			tx.commit ();
+		} catch (HibernateException e){
+			
+			tx.trollback ();
+		} finally {
+			
+			HibernateUtil.closeSession();
+			
+		}
+
+		return result;
 	}
 
 	@Override
 	public TemperatureMeasurement getElementById(long id) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		
+		return session.get(TemperatureMeasurement.class, id);
 	}
 
 	@Override
 	public TemperatureMeasurement getElementByName(String name) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public List<TemperatureMeasurement> getAllElements() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		List<TemperatureMeasurement> result = null;
+		
+		result = session.createQuery ("from TemperatureMeasurement").list();
+		return result;
 	}
 
 	@Override
 	public void deleteElement(long id) {
-		// TODO Auto-generated method stub
+		
+		Transaction tx = session.beginTransaction ();
+		
+		try {
+			
+			TemperatureMeasurement toDel = this.getElementById(id);
+			if (toDel != null){
+				
+				session.delete(toDel);
+				tx.commit();
+			}else {
+				tx.rollback();
+			}
+			
+		} catch (HibernateException e){
+			tx.rollback ();
+			
+		} finally {
+			HibernateUtil.closeSession();
+		}
 		
 	}
 
 	@Override
 	public void deleteElement(TemperatureMeasurement arg0) {
-		// TODO Auto-generated method stub
+
+		Transaction tx = session.beginTransaction ();
+		
+		try {
+			
+			if (arg0 != null){
+				
+				session.delete(arg0);
+				tx.commit();
+			}else {
+				tx.rollback();
+			}
+			
+		} catch (HibernateException e){
+			tx.rollback ();
+			
+		} finally {
+			HibernateUtil.closeSession();
+		}		
 		
 	}
 

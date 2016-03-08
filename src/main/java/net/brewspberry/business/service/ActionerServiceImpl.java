@@ -70,8 +70,9 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 
 	@Override
 	public Actioner update(Actioner arg0) {
-		// TODO Auto-generated method stub
-		return null;
+
+
+		return actionerDao.update (arg0);
 	}
 
 	@Override
@@ -81,38 +82,38 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 
 	@Override
 	public List<Actioner> getAllElements() {
-		// TODO Auto-generated method stub
-		return null;
+
+		return actionerDao.getAllElements();
 	}
 
 	@Override
 	public void deleteElement(long id) {
-		// TODO Auto-generated method stub
-
+		
+		actionerDao.deleteElement(id);
 	}
 
 	@Override
 	public void deleteElement(Actioner arg0) {
-		// TODO Auto-generated method stub
+		actionerDao.deleteElement(arg0);
 
 	}
 
 	@Override
 	public List<Actioner> getAllDistinctElements() {
-		// TODO Auto-generated method stub
-		return null;
+
+		return actionerDao.getAllDistinctElements();
 	}
 
 	@Override
 	public List<Actioner> getActionerByBrassin(Brassin brassin) {
-		// TODO Auto-generated method stub
-		return null;
+
+		return actionerDao.getActionerByBrassin(brassin);
 	}
 
 	@Override
 	public List<Actioner> getActionnerByEtape(Etape etape) {
 		// TODO Auto-generated method stub
-		return null;
+		return actionerDao.getActionnerByEtape(etape);
 	}
 
 	public List<Actioner> getRealTimeActionersByName(List<String> which,
