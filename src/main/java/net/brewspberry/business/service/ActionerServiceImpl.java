@@ -107,13 +107,13 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 	@Override
 	public List<Actioner> getActionerByBrassin(Brassin brassin) {
 
-		return actionerDao.getActionerByBrassin(brassin);
+		return null;
 	}
 
 	@Override
 	public List<Actioner> getActionnerByEtape(Etape etape) {
 		// TODO Auto-generated method stub
-		return actionerDao.getActionnerByEtape(etape);
+		return null;
 	}
 
 	public List<Actioner> getRealTimeActionersByName(List<String> which,

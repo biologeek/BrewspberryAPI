@@ -40,11 +40,11 @@ public class Etape implements Serializable{
     @JoinColumn(name="etp_bra_id")
     private Brassin etp_brassin;
     
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="tmes_etape")
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="tmes_etape")
     private List<TemperatureMeasurement> etp_temperature_measurement;
     
     
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="act_etape", cascade=CascadeType.ALL)
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="act_etape", cascade=CascadeType.ALL)
     private List<Actioner> etp_actioner;
     
 

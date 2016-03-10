@@ -37,16 +37,16 @@ public class Brassin implements Serializable{
     private Double bra_quantiteEnLitres;
     private Integer bra_statut;
     
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="malt_brassin")
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="malt_brassin")
     private List<Malt> bra_malts;
     
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="hbl_brassin")
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="hbl_brassin")
     private List<Houblon> bra_houblons;
     
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="lev_brassin")
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="lev_brassin")
     private List<Levure> bra_levures;
     
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="etp_brassin")
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="etp_brassin")
     List<Etape> bra_etapes;
     
 	@OneToOne(mappedBy="beer_brassin")

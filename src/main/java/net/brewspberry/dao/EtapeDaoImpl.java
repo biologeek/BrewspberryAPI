@@ -3,8 +3,10 @@ package net.brewspberry.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Transaction;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 
 import net.brewspberry.business.IGenericDao;
 import net.brewspberry.business.beans.Etape;
@@ -73,7 +75,7 @@ public class EtapeDaoImpl implements IGenericDao<Etape> {
 		
 		try {
 			
-			Etape toDel = session.get(Etape.class, id);
+			Etape toDel = (Etape) session.get(Etape.class, id);
 			session.delete(toDel);
 			tx.commit();			
 		} catch (HibernateException e){
@@ -119,7 +121,7 @@ public class EtapeDaoImpl implements IGenericDao<Etape> {
 
 	@Override
 	public Etape getElementByName(String name) {
-		Etape result = session.createCriteria(Etape.class).add("etp_nom", name).uniqueResult();
+		Etape result = (Etape) session.createCriteria(Etape.class).add(Restrictions.eq("etp_nom", name)).uniqueResult();
 		return result;
 	}
 

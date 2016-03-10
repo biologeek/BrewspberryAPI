@@ -47,7 +47,7 @@ public class TemperatureMeasurementDaoImpl implements
 	@Override
 	public List<TemperatureMeasurement> getTemperatureMeasurementByEtape(
 			Etape etape) {
-		List<TemperatureMeasurement> result = session.createCriteria (TemperatureMeasurement.class).add("tmes_etape", etape).list();
+		List<TemperatureMeasurement> result = session.createCriteria (TemperatureMeasurement.class).add(Restrictions.eq("tmes_etape", etape)).list();
 		return result;
 	}
 
@@ -178,11 +178,11 @@ public class TemperatureMeasurementDaoImpl implements
 		TemperatureMeasurement result = null;
 		
 		try{
-			result = (TemperatureMeasurement) session.update (arg0);
+			session.update (arg0);
 			tx.commit ();
 		} catch (HibernateException e){
 			
-			tx.trollback ();
+			tx.rollback ();
 		} finally {
 			
 			HibernateUtil.closeSession();
@@ -196,7 +196,7 @@ public class TemperatureMeasurementDaoImpl implements
 	public TemperatureMeasurement getElementById(long id) {
 		
 		
-		return session.get(TemperatureMeasurement.class, id);
+		return (TemperatureMeasurement) session.get(TemperatureMeasurement.class, id);
 	}
 
 	@Override

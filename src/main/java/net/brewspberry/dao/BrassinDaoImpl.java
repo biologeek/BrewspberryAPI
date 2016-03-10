@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
 import net.brewspberry.business.IGenericDao;
 import net.brewspberry.business.ISpecificBrassinDAO;
@@ -127,13 +128,13 @@ public class BrassinDaoImpl implements IGenericDao<Brassin>,
 
 	@Override
 	public Brassin getBrassinByBeer(Biere beer) {
-		Brassin result = session.createCriteria(Brassin.class).add("bra_beer", beer).uniqueResult();
+		Brassin result = (Brassin) session.createCriteria(Brassin.class).add(Restrictions.eq("bra_beer", beer)).uniqueResult();
 		return result;
 	}
 
 	@Override
 	public Brassin getElementByName(String name) {
-		Brassin result = session.createCriteria(Brassin.class).add("bra_nom", name).uniqueResult();
+		Brassin result = (Brassin) session.createCriteria(Brassin.class).add(Restrictions.eq("bra_nom", name)).uniqueResult();
 		return result;
 	}
 

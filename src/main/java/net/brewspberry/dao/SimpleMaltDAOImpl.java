@@ -13,6 +13,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Subqueries;
 
 import net.brewspberry.business.IGenericDao;
+import net.brewspberry.business.beans.SimpleHoublon;
 import net.brewspberry.business.beans.SimpleMalt;
 import net.brewspberry.exceptions.DAOException;
 import net.brewspberry.util.HibernateUtil;
@@ -134,7 +135,7 @@ public class SimpleMaltDAOImpl implements IGenericDao<SimpleMalt> {
 	@Override
 	public SimpleMalt getElementByName(String name) {
 
-		SimpleHoublon result = (SimpleMalt) session.createQuery(
+		SimpleMalt result = (SimpleMalt) session.createQuery(
 				"from SimpleMalt where ing_desc = '" + name + "'")
 				.uniqueResult();
 
