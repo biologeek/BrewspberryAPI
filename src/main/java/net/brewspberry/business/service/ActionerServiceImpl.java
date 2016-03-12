@@ -107,13 +107,12 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 	@Override
 	public List<Actioner> getActionerByBrassin(Brassin brassin) {
 
-		return null;
+		return actionerSpecDao.getActionerByBrassin(brassin);
 	}
 
 	@Override
 	public List<Actioner> getActionnerByEtape(Etape etape) {
-		// TODO Auto-generated method stub
-		return null;
+		return actionerSpecDao.getActionnerByEtape(etape);
 	}
 
 	public List<Actioner> getRealTimeActionersByName(List<String> which,
@@ -291,7 +290,7 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 				logger.info("It's a DS18B20 :");
 
 
-				logger.fine("Duree : " + currentStep.getEtp_duree());
+				logger.fine("Duree : " + actioner.getAct_etape().getEtp_duree());
 				logger.fine("Duree");
 				try {
 					if (actioner.getAct_brassin() != null
@@ -310,16 +309,20 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 						 * @see stopActionInDatabase
 						 */
 
+						actioner = this.startActionInDatabase(actioner);
+
 						duration = String.valueOf((double) currentStep
 								.getEtp_duree().getMinute()
 								* (Double.parseDouble(durationCoef)));
 
 						args[0] = "MINUTE";
-						args[0] = String.valueOf(duration);
-						args[0] = String.valueOf(actioner.getAct_brassin());
-						args[0] = String.valueOf(actioner.getAct_etape());
-						args[0] = String.valueOf(actioner.getAct_id());
+						args[1] = String.valueOf(duration);
+						args[2] = String.valueOf(actioner.getAct_brassin().getBra_id());
+						args[3] = String.valueOf(actioner.getAct_etape().getEtp_id());
+						args[4] = String.valueOf(actioner.getAct_id());
 
+						
+						logger.info(String.join(";", args));
 						temperatureBatch = new BatchRecordTemperatures(args);
 
 						recordTemperatureBatch = new Thread(

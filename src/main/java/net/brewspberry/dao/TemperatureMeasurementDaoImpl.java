@@ -24,21 +24,21 @@ import net.brewspberry.util.HibernateUtil;
 import net.brewspberry.util.LogManager;
 
 public class TemperatureMeasurementDaoImpl implements
-		ISpecificTemperatureMeasurementService, IGenericDao<TemperatureMeasurement> {
+		ISpecificTemperatureMeasurementService,
+		IGenericDao<TemperatureMeasurement> {
 
-	
-	Logger logger = LogManager.getInstance(TemperatureMeasurementDaoImpl.class.getName());
+	Logger logger = LogManager.getInstance(TemperatureMeasurementDaoImpl.class
+			.getName());
 	Session session = HibernateUtil.getSession();
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<TemperatureMeasurement> getTemperatureMeasurementByBrassin(
-			Long brassin) {
-		String sqlQuery = "SELECT * FROM TemperatureMeasurement WHERE tmes_bra_id = "
-				+ brassin + " ORDER BY tmes_date;";
+			Brassin brassin) {
 
-		List<TemperatureMeasurement> result = session.createSQLQuery(sqlQuery)
-				.list();
+		List<TemperatureMeasurement> result = session
+				.createCriteria(TemperatureMeasurement.class)
+				.add(Restrictions.eq("tmes_brassin", brassin)).list();
 
 		HibernateUtil.closeSession();
 		return result;
@@ -47,7 +47,10 @@ public class TemperatureMeasurementDaoImpl implements
 	@Override
 	public List<TemperatureMeasurement> getTemperatureMeasurementByEtape(
 			Etape etape) {
-		List<TemperatureMeasurement> result = session.createCriteria (TemperatureMeasurement.class).add(Restrictions.eq("tmes_etape", etape)).list();
+		@SuppressWarnings("unchecked")
+		List<TemperatureMeasurement> result = (List<TemperatureMeasurement>) session
+				.createCriteria(TemperatureMeasurement.class)
+				.add(Restrictions.eq("tmes_etape", etape)).list();
 		return result;
 	}
 
@@ -74,9 +77,8 @@ public class TemperatureMeasurementDaoImpl implements
 		}
 		if (result == null || result.equals(new TemperatureMeasurement())) {
 			throw new EntityNotFoundException(
-					"Temperature measurement not found for uuid "+uuid);
+					"Temperature measurement not found for uuid " + uuid);
 		}
-
 
 		HibernateUtil.closeSession();
 		return result;
@@ -86,30 +88,29 @@ public class TemperatureMeasurementDaoImpl implements
 	public TemperatureMeasurement getLastTemperatureMeasurementByName(
 			String name) throws Exception {
 
-		String sqlQuery = "FROM TemperatureMeasurement WHERE tmes_probe_name = '"+name+"' ORDER BY tmes_date DESC";
+		String sqlQuery = "FROM TemperatureMeasurement WHERE tmes_probe_name = '"
+				+ name + "' ORDER BY tmes_date DESC";
 
 		TemperatureMeasurement result = new TemperatureMeasurement();
 
 		if (name != null) {
 
 			if (name != "") {
-				
-				
 
 				/*
-				 *  Beware, if multiple brews at the same time, there may be conflict :
-				 *  
-				 *  should add as parameter and criterias Brassin and Etape objects to better filter
-				 *  
-				 *  but it's ok if you do only 1 brew or step at a time
-				 *  
+				 * Beware, if multiple brews at the same time, there may be
+				 * conflict :
+				 * 
+				 * should add as parameter and criterias Brassin and Etape
+				 * objects to better filter
+				 * 
+				 * but it's ok if you do only 1 brew or step at a time
 				 */
-				
+
 				Query request = session.createQuery(sqlQuery).setMaxResults(1);
-				
+
 				result = (TemperatureMeasurement) request.uniqueResult();
-				
-				
+
 			} else {
 				throw new Exception("Empty string is not permitted !!");
 			}
@@ -118,13 +119,12 @@ public class TemperatureMeasurementDaoImpl implements
 
 		if (result == null || result.equals(new TemperatureMeasurement())) {
 			throw new EntityNotFoundException(
-					"Temperature measurement not found for name "+name);
+					"Temperature measurement not found for name " + name);
 		}
 
 		HibernateUtil.closeSession();
 		return result;
 	}
-
 
 	@Override
 	public List<TemperatureMeasurement> getAllLastTemperatureMeasurements(
@@ -153,40 +153,40 @@ public class TemperatureMeasurementDaoImpl implements
 		Transaction tx = (Transaction) session.beginTransaction();
 		TemperatureMeasurement result = null;
 		try {
-			
+
 			long id = (long) session.save(arg0);
 			tx.commit();
-			
+
 			result = this.getElementById(id);
-			
-			logger.info("Saved TemperatureMeasurement with id "+id);
-			
-		}catch(HibernateException e){
-			
+
+			logger.info("Saved TemperatureMeasurement with id " + id);
+
+		} catch (HibernateException e) {
+
 			tx.rollback();
 			e.printStackTrace();
 		} finally {
 			HibernateUtil.closeSession();
 
-		}		
+		}
 		return result;
 	}
 
 	@Override
 	public TemperatureMeasurement update(TemperatureMeasurement arg0) {
-		Transaction tx = session.beginTransaction ();
+		Transaction tx = session.beginTransaction();
 		TemperatureMeasurement result = null;
-		
-		try{
-			session.update (arg0);
-			tx.commit ();
-		} catch (HibernateException e){
-			
-			tx.rollback ();
+
+		try {
+			session.update(arg0);
+			tx.commit();
+		} catch (HibernateException e) {
+
+			tx.rollback();
 		} finally {
-			
+
 			HibernateUtil.closeSession();
-			
+
 		}
 
 		return result;
@@ -194,73 +194,73 @@ public class TemperatureMeasurementDaoImpl implements
 
 	@Override
 	public TemperatureMeasurement getElementById(long id) {
-		
-		
-		return (TemperatureMeasurement) session.get(TemperatureMeasurement.class, id);
+
+		return (TemperatureMeasurement) session.get(
+				TemperatureMeasurement.class, id);
 	}
 
 	@Override
 	public TemperatureMeasurement getElementByName(String name) {
-		
+
 		return null;
 	}
 
 	@Override
 	public List<TemperatureMeasurement> getAllElements() {
-		
+
 		List<TemperatureMeasurement> result = null;
-		
-		result = session.createQuery ("from TemperatureMeasurement").list();
+
+		result = session.createQuery("from TemperatureMeasurement").list();
 		return result;
 	}
 
 	@Override
 	public void deleteElement(long id) {
-		
-		Transaction tx = session.beginTransaction ();
-		
+
+		Transaction tx = session.beginTransaction();
+
 		try {
-			
+
 			TemperatureMeasurement toDel = this.getElementById(id);
-			if (toDel != null){
-				
+			if (toDel != null) {
+
 				session.delete(toDel);
 				tx.commit();
-			}else {
+			} else {
 				tx.rollback();
 			}
-			
-		} catch (HibernateException e){
-			tx.rollback ();
-			
+
+		} catch (HibernateException e) {
+			tx.rollback();
+
 		} finally {
 			HibernateUtil.closeSession();
 		}
-		
+
 	}
 
 	@Override
 	public void deleteElement(TemperatureMeasurement arg0) {
 
-		Transaction tx = session.beginTransaction ();
-		
+		Transaction tx = session.beginTransaction();
+
 		try {
-			
-			if (arg0 != null){
-				
+
+			if (arg0 != null) {
+
 				session.delete(arg0);
 				tx.commit();
-			}else {
+			} else {
 				tx.rollback();
 			}
-			
-		} catch (HibernateException e){
-			tx.rollback ();
-			
+
+		} catch (HibernateException e) {
+			tx.rollback();
+
 		} finally {
 			HibernateUtil.closeSession();
-		}		
-		
+		}
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -268,7 +268,8 @@ public class TemperatureMeasurementDaoImpl implements
 	public List<TemperatureMeasurement> getAllDistinctElements() {
 
 		List<TemperatureMeasurement> result = new ArrayList<TemperatureMeasurement>();
-		result = session.createQuery("from TemperatureMeasurement group by tmes_probe_name").list();
+		result = session.createQuery(
+				"from TemperatureMeasurement group by tmes_probe_name").list();
 
 		HibernateUtil.closeSession();
 

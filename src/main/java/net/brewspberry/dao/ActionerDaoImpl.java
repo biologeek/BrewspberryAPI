@@ -6,11 +6,14 @@ import java.util.logging.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
 import net.brewspberry.business.IGenericDao;
 import net.brewspberry.business.ISpecificActionerDao;
 import net.brewspberry.business.beans.Actioner;
 import net.brewspberry.business.beans.Brassin;
+import net.brewspberry.business.beans.Etape;
+import net.brewspberry.business.beans.TemperatureMeasurement;
 import net.brewspberry.exceptions.DAOException;
 import net.brewspberry.util.HibernateUtil;
 import net.brewspberry.util.LogManager;
@@ -158,6 +161,16 @@ public class ActionerDaoImpl implements IGenericDao<Actioner>,
 		HibernateUtil.closeSession();
 
 		return result;
+	}
+
+	@Override
+	public List<Actioner> getActionerByBrassin(Brassin brassin) {
+		return session.createCriteria(TemperatureMeasurement.class).add(Restrictions.eq("act_brassin", brassin)).list();
+	}
+
+	@Override
+	public List<Actioner> getActionnerByEtape(Etape etape) {
+		return session.createCriteria(TemperatureMeasurement.class).add(Restrictions.eq("act_etape", etape)).list();
 	}
 
 }

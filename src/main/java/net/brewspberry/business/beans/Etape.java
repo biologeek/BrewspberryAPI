@@ -44,7 +44,7 @@ public class Etape implements Serializable{
     private List<TemperatureMeasurement> etp_temperature_measurement;
     
     
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="act_etape", cascade=CascadeType.ALL)
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="act_etape", cascade=CascadeType.ALL)
     private List<Actioner> etp_actioner;
     
 

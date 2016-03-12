@@ -33,12 +33,12 @@ public class TemperatureMeasurementServiceImpl implements
 	private IGenericService<Etape> etapeService = new EtapeServiceImpl();
 	
 	private IGenericDao<TemperatureMeasurement> tmesDao = new TemperatureMeasurementDaoImpl();
+	private ISpecificTemperatureMeasurementService tmesSpecDao = new TemperatureMeasurementDaoImpl();
 
 	@Override
 	public List<TemperatureMeasurement> getTemperatureMeasurementByBrassin(
-			Long bid) {
+			Brassin bid) {
 
-		List<TemperatureMeasurement> tmes_bra_list;
 
 		return tempDao.getTemperatureMeasurementByBrassin(bid);
 	}
@@ -46,8 +46,8 @@ public class TemperatureMeasurementServiceImpl implements
 	@Override
 	public List<TemperatureMeasurement> getTemperatureMeasurementByEtape(
 			Etape etape) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return tmesSpecDao.getTemperatureMeasurementByEtape(etape);
 	}
 
 	@Override

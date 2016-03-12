@@ -9,7 +9,7 @@ import net.brewspberry.business.beans.TemperatureMeasurement;
 public interface ISpecificTemperatureMeasurementService {
 	
 	
-	public List<TemperatureMeasurement> getTemperatureMeasurementByBrassin(Long bid);
+	public List<TemperatureMeasurement> getTemperatureMeasurementByBrassin(Brassin bid);
 	public List<TemperatureMeasurement> getTemperatureMeasurementByEtape(Etape etape);
 	
 	public TemperatureMeasurement getLastTemperatureMeasurementByUUID (String uuid) throws Exception;
