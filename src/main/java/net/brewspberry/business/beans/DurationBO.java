@@ -27,7 +27,6 @@ public class DurationBO implements Serializable{
 	private long milisecond;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@PrimaryKeyJoinColumn
 	private Etape dur_step;
 	
 	

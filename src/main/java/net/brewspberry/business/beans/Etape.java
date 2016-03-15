@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 
 @Entity
@@ -30,8 +31,10 @@ public class Etape implements Serializable{
     private Date etp_debut;
     private Date etp_fin;
     
-    @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="dur_step")
-    private DurationBO etp_duree;
+    @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@PrimaryKeyJoinColumn
+	private DurationBO etp_duree;
+    
     private Double etp_temperature_theorique;
     private String etp_remarque;
    
@@ -44,7 +47,7 @@ public class Etape implements Serializable{
     private List<TemperatureMeasurement> etp_temperature_measurement;
     
     
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="act_etape", cascade=CascadeType.ALL)
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="act_etape")
     private List<Actioner> etp_actioner;
     
 

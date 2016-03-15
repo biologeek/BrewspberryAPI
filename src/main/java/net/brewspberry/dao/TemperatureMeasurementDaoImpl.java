@@ -51,6 +51,7 @@ public class TemperatureMeasurementDaoImpl implements
 		List<TemperatureMeasurement> result = (List<TemperatureMeasurement>) session
 				.createCriteria(TemperatureMeasurement.class)
 				.add(Restrictions.eq("tmes_etape", etape)).list();
+		HibernateUtil.closeSession();
 		return result;
 	}
 
