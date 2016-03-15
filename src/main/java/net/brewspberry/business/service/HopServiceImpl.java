@@ -18,6 +18,7 @@ public class HopServiceImpl implements IGenericService<Houblon>, ISpecificIngred
 
 	
 	IGenericDao<Houblon> hopDao = new HopDaoImpl ();
+	IGenericDao<SimpleHoublon> shopDao = new SimpleHopDaoImpl ();
 	
 	
 	
@@ -75,7 +76,7 @@ public class HopServiceImpl implements IGenericService<Houblon>, ISpecificIngred
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Houblon> getIngredientFromArrayId(String[] array) {
+	public List<Houblon> getIngredientFromArrayId(String[] array, String[] arrayQte, String[] arrayPrix) {
 		List<Houblon> result = new ArrayList<Houblon>();
 		
 		
@@ -96,7 +97,18 @@ public class HopServiceImpl implements IGenericService<Houblon>, ISpecificIngred
 					}
 						logger.info("Getting hopName "+currentName);
 					
-					Houblon currentIngredient = hopDao.getElementById(currentNameNumeric);
+					Houblon currentIngredient = new Houblon();
+					
+					SimpleHoublon currentSimpleHop = shopDao.getElementById(currentNameNumeric);
+					
+
+					currentIngredient.setIng_desc(currentSimpleHop.getIng_desc());
+					currentIngredient.setIng_fournisseur(currentSimpleHop.getIng_fournisseur());
+					currentIngredient.setIng_disc(currentSimpleHop.getIng_disc());
+					currentIngredient.setShbl_acide_alpha(currentSimpleHop.getShbl_acide_alpha());
+					currentIngredient.setShbl_aromes(currentSimpleHop.getShbl_aromes());
+					currentIngredient.setShbl_type(currentSimpleHop.getShbl_type());
+					currentIngredient.setShbl_variete(currentSimpleHop.getShbl_variete());
 					
 					//Resetting ID so that it is saved when creating new brew
 					currentIngredient.setIng_id((long) 0);
@@ -170,7 +182,7 @@ public class HopServiceImpl implements IGenericService<Houblon>, ISpecificIngred
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<SimpleHoublon> getIngredientFromArrayId(String[] array) {
+		public List<SimpleHoublon> getIngredientFromArrayId(String[] array, String[] arrayQte, String[] arrayPrix) {
 			List<SimpleHoublon> result = new ArrayList<SimpleHoublon>();
 			
 			

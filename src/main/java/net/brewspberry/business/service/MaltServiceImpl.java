@@ -16,6 +16,7 @@ import net.brewspberry.exceptions.DAOException;
 public class MaltServiceImpl implements IGenericService<Malt>,
 		ISpecificMaltDAO, ISpecificIngredientService {
 
+	IGenericDao<SimpleMalt> smaltDAO = new SimpleMaltDAOImpl();
 	IGenericDao<Malt> maltDAO = new MaltDAOImpl();
 
 	@Override
@@ -61,7 +62,7 @@ public class MaltServiceImpl implements IGenericService<Malt>,
 	}
 
 	@Override
-	public List<Malt> getIngredientFromArrayId(String[] array) {
+	public List<Malt> getIngredientFromArrayId(String[] array, String[] arrayQte, String[] arrayPrix) {
 		List<Malt> result = new ArrayList<Malt>();
 
 		if (array != null) {
@@ -78,8 +79,16 @@ public class MaltServiceImpl implements IGenericService<Malt>,
 						e.printStackTrace();
 					}
 
-					Malt currentIngredient = maltDAO.getElementById(currentID);
+					Malt currentIngredient = new Malt();
+					
+					SimpleMalt currentSimpleMalt = smaltDAO.getElementById(currentID);
 
+					currentIngredient.setIng_desc(currentSimpleMalt.getIng_desc());
+					currentIngredient.setIng_disc(currentSimpleMalt.getIng_disc());
+					currentIngredient.setIng_fournisseur(currentSimpleMalt.getIng_fournisseur());
+					currentIngredient.setSmal_cereale(currentSimpleMalt.getSmal_cereale());
+					currentIngredient.setSmal_couleur(currentSimpleMalt.getSmal_couleur());
+					currentIngredient.setSmal_type(currentSimpleMalt.getSmal_type());
 					currentIngredient.setIng_id(0);
 
 					currentIngredient.setIng_quantite((float) 0.0);
@@ -145,7 +154,7 @@ public class MaltServiceImpl implements IGenericService<Malt>,
 		}
 
 		@Override
-		public List<SimpleMalt> getIngredientFromArrayId(String[] array) {
+		public List<SimpleMalt> getIngredientFromArrayId(String[] array, String[] arrayQte, String[] arrayPrix) {
 			List<SimpleMalt> result = new ArrayList<SimpleMalt>();
 
 			if (array != null) {

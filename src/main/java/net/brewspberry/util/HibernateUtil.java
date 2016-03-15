@@ -1,5 +1,7 @@
 package net.brewspberry.util;
 
+import java.util.logging.Logger;
+
 import net.brewspberry.business.beans.AbstractIngredient;
 import net.brewspberry.business.beans.Actioner;
 import net.brewspberry.business.beans.Biere;
@@ -18,13 +20,17 @@ import net.brewspberry.business.beans.TemperatureMeasurement;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
 
 @SuppressWarnings("deprecation")
 public class HibernateUtil {
 
 	private static final ThreadLocal<Session> threadLocal = new ThreadLocal<Session>();
 	private static SessionFactory sessionFactory;
+	private static Logger logger = LogManager.getInstance(HibernateUtil.class.getName());
+	private static ServiceRegistry serviceRegistry;
 
 	static {
 		try {
@@ -53,11 +59,14 @@ public class HibernateUtil {
 					.addAnnotatedClass(TemperatureMeasurement.class)
 					.addAnnotatedClass(Actioner.class)
 					.addAnnotatedClass(DurationBO.class);
-
-			sessionFactory = configuration.buildSessionFactory();
+			
+			
+			serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
+		            configuration.getProperties()).build();
+			sessionFactory = configuration.buildSessionFactory(serviceRegistry);
 
 		} catch (Exception e) {
-			System.out.append("** Exception in SessionFactory **");
+			logger.severe("** Exception in SessionFactory **");
 			e.printStackTrace();
 		}
 		return sessionFactory;
@@ -87,11 +96,12 @@ public class HibernateUtil {
 		return session;
 	}
 
+	
 	public static void rebuildSessionFactory() {
 		try {
 			sessionFactory = configureSessionFactory();
 		} catch (Exception e) {
-			System.err.println("%%%% Error Creating SessionFactory %%%%");
+			logger.severe("%%%% Error Creating SessionFactory %%%%");
 			e.printStackTrace();
 		}
 	}

@@ -16,6 +16,7 @@ public class YeastServiceImpl implements IGenericService<Levure>,
 		ISpecificIngredientService {
 
 	IGenericDao<Levure> levureDao = new YeastDAOImpl();
+	IGenericDao<SimpleLevure> slevureDao = new SimpleYeastDAOImpl();
 
 	@Override
 	public void deleteElement(long arg0) {
@@ -57,7 +58,7 @@ public class YeastServiceImpl implements IGenericService<Levure>,
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Levure> getIngredientFromArrayId(String[] array) {
+	public List<Levure> getIngredientFromArrayId(String[] array, String[] arrayQte, String[] arrayPrix) {
 		List<Levure> result = new ArrayList<Levure>();
 
 		if (array != null) {
@@ -74,11 +75,19 @@ public class YeastServiceImpl implements IGenericService<Levure>,
 						e.printStackTrace();
 					}
 
-					Levure currentIngredient = levureDao
+					SimpleLevure currentSimpleIngredient = slevureDao
 							.getElementById(currentID);
-					currentIngredient.setIng_id((long) 0);
-					currentIngredient.setLev_brassin(null);
+					
+					Levure currentIngredient = new Levure();
 
+					currentIngredient.setIng_desc(currentSimpleIngredient.getIng_desc());
+					currentIngredient.setIng_disc(currentSimpleIngredient.getIng_disc());
+					currentIngredient.setIng_fournisseur(currentSimpleIngredient.getIng_fournisseur());
+					currentIngredient.setSlev_aromes(currentSimpleIngredient.getSlev_aromes());
+					currentIngredient.setSlev_floculation(currentSimpleIngredient.getSlev_floculation());
+					currentIngredient.setSlev_espece(currentSimpleIngredient.getSlev_espece());
+					
+					
 					if (!currentIngredient.equals(new Levure())) {
 						result.add(currentIngredient);
 					}
@@ -136,7 +145,7 @@ public class YeastServiceImpl implements IGenericService<Levure>,
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<SimpleLevure> getIngredientFromArrayId(String[] array) {
+		public List<SimpleLevure> getIngredientFromArrayId(String[] array, String[] arrayQte, String[] arrayPrix) {
 			List<SimpleLevure> result = new ArrayList<SimpleLevure>();
 
 			if (array != null) {
