@@ -324,4 +324,12 @@ public class TemperatureMeasurementServiceImpl implements
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public List<TemperatureMeasurement> getTemperatureMeasurementsAfterID(
+			String uuid, long tmesID) {
+		
+
+		return null;
+	}
 }

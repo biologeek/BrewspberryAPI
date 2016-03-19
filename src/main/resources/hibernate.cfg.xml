@@ -33,6 +33,9 @@
 		<!-- <mapping class="net.brewspberry.business.beans.Malt" /> <mapping class="net.brewspberry.business.beans.Houblon" 
 			/> <mapping class="net.brewspberry.business.beans.Levure" /> -->
 		<!-- List of XML mapping files -->
-
+		<property name="c3p0.min_size">5</property>
+		<property name="c3p0.max_size">20</property>
+		<property name="c3p0.timeout">1800</property>
+		<property name="c3p0.max_statements">50</property>
 	</session-factory>
 </hibernate-configuration>
