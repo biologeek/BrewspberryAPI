@@ -21,7 +21,8 @@ import net.brewspberry.dao.TemperatureMeasurementDaoImpl;
 import net.brewspberry.exceptions.DAOException;
 
 public class TemperatureMeasurementServiceImpl implements
-		ISpecificTemperatureMeasurementService, IGenericService<TemperatureMeasurement> {
+		ISpecificTemperatureMeasurementService,
+		IGenericService<TemperatureMeasurement> {
 
 	private String measurementsCSV = "/home/xavier/ds18b20_raw_measurements.csv";
 
@@ -31,7 +32,7 @@ public class TemperatureMeasurementServiceImpl implements
 	private IGenericService<Brassin> brassinService = new BrassinServiceImpl();
 
 	private IGenericService<Etape> etapeService = new EtapeServiceImpl();
-	
+
 	private IGenericDao<TemperatureMeasurement> tmesDao = new TemperatureMeasurementDaoImpl();
 	private ISpecificTemperatureMeasurementService tmesSpecDao = new TemperatureMeasurementDaoImpl();
 
@@ -39,14 +40,13 @@ public class TemperatureMeasurementServiceImpl implements
 	public List<TemperatureMeasurement> getTemperatureMeasurementByBrassin(
 			Brassin bid) {
 
-
 		return tempDao.getTemperatureMeasurementByBrassin(bid);
 	}
 
 	@Override
 	public List<TemperatureMeasurement> getTemperatureMeasurementByEtape(
 			Etape etape) {
-		
+
 		return tmesSpecDao.getTemperatureMeasurementByEtape(etape);
 	}
 
@@ -134,7 +134,7 @@ public class TemperatureMeasurementServiceImpl implements
 
 			lastLine = line;
 		}
-		
+
 		System.out.println(lastLine);
 
 		result = this.parseLineAsObjects(lastLine);
@@ -155,7 +155,7 @@ public class TemperatureMeasurementServiceImpl implements
 
 			lastLine = line;
 		}
-		System.out.println("Found line "+lastLine);
+		System.out.println("Found line " + lastLine);
 
 		result = this.parseLineAsObject(lastLine, uuidOrName, uuid);
 
@@ -190,17 +190,13 @@ public class TemperatureMeasurementServiceImpl implements
 		if (line != null && line != "") {
 
 			String[] array = line.split(";");
-			
+
 			int counter = 0;
 
 			for (int i = 3; i < array.length; i += 2) {
 
-				
-				
 				TemperatureMeasurement tmes = new TemperatureMeasurement();
 
-				
-				
 				tmes.setTmes_date(sdf.parse(array[0]));
 				tmes.setTmes_brassin(brassinService.getElementById(Long
 						.parseLong(array[1])));
@@ -211,7 +207,7 @@ public class TemperatureMeasurementServiceImpl implements
 				tmes.setTmes_value(Float.parseFloat(array[i + 1]));
 
 				result.add(tmes);
-				counter +=1;
+				counter += 1;
 			}
 
 		}
@@ -225,14 +221,14 @@ public class TemperatureMeasurementServiceImpl implements
 
 	}
 
-	public TemperatureMeasurement parseLineAsObject(String line, String uuidOrName, Boolean uuid)
-			throws Exception {
-		
-		System.out.println("Parsing line as object "+uuidOrName);
-		
+	public TemperatureMeasurement parseLineAsObject(String line,
+			String uuidOrName, Boolean uuid) throws Exception {
+
+		System.out.println("Parsing line as object " + uuidOrName);
+
 		TemperatureMeasurement result = new TemperatureMeasurement();
-		System.out.println("Found line "+line);
-		
+		System.out.println("Found line " + line);
+
 		if (line != null && line != "") {
 
 			String[] array = line.split(";");
@@ -240,7 +236,6 @@ public class TemperatureMeasurementServiceImpl implements
 
 			for (int i = 3; i < array.length; i += 2) {
 
-				
 				TemperatureMeasurement tmes = new TemperatureMeasurement();
 
 				tmes.setTmes_date(sdf.parse(array[0]));
@@ -248,35 +243,35 @@ public class TemperatureMeasurementServiceImpl implements
 						.parseLong(array[1])));
 				tmes.setTmes_etape(etapeService.getElementById(Long
 						.parseLong(array[2])));
-				
-				if (uuid && array[i].matches(uuidOrName)){
-					
-					System.out.println("Found uuid "+uuidOrName);
+
+				if (uuid && array[i].matches(uuidOrName)) {
+
+					System.out.println("Found uuid " + uuidOrName);
 
 					tmes.setTmes_probe_name("PROBE" + counter);
 					tmes.setTmes_probeUI(array[i]);
 					tmes.setTmes_value(Float.parseFloat(array[i + 1]));
 
 					result = tmes;
-				}
-				else if(!uuid){
-					
-					int eqi = Integer.parseInt(uuidOrName.substring(uuidOrName.length() - 1))*2 + 3;
-					
-					System.out.println(eqi+" " + i);
-					if (eqi == i){
-						
-						System.out.println("Found name "+uuidOrName);
-	
+				} else if (!uuid) {
+
+					int eqi = Integer.parseInt(uuidOrName.substring(uuidOrName
+							.length() - 1)) * 2 + 3;
+
+					System.out.println(eqi + " " + i);
+					if (eqi == i) {
+
+						System.out.println("Found name " + uuidOrName);
+
 						tmes.setTmes_probe_name("PROBE" + counter);
 						tmes.setTmes_probeUI(array[i]);
 						tmes.setTmes_value(Float.parseFloat(array[i + 1]));
-	
+
 						result = tmes;
 					}
 				}
-				
-				counter +=1;
+
+				counter += 1;
 			}
 
 		}
@@ -310,13 +305,13 @@ public class TemperatureMeasurementServiceImpl implements
 	@Override
 	public void deleteElement(long id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void deleteElement(TemperatureMeasurement arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -327,9 +322,8 @@ public class TemperatureMeasurementServiceImpl implements
 
 	@Override
 	public List<TemperatureMeasurement> getTemperatureMeasurementsAfterID(
-			String uuid, long tmesID) {
-		
+			Etape etape, String uuid, long tmesID) {
 
-		return null;
+		return tmesSpecDao.getTemperatureMeasurementsAfterID(etape, uuid, tmesID);
 	}
 }

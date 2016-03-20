@@ -277,4 +277,36 @@ public class TemperatureMeasurementDaoImpl implements
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<TemperatureMeasurement> getTemperatureMeasurementsAfterID(
+			Etape etape, String uuid, long tmesID) {
+
+		List<TemperatureMeasurement> result = new ArrayList<TemperatureMeasurement>();
+
+		Criteria query;
+
+		if (etape != null) {
+			if (tmesID > 0) {
+
+				query = session.createCriteria(TemperatureMeasurement.class)
+						.add(Restrictions.gt("tmes_id", tmesID))
+						.add(Restrictions.eq("tmes_etape", etape));
+
+				if (uuid != null && uuid != "all") {
+
+					query.add(Restrictions.eq("tmes_probeUI", uuid));
+
+				}
+
+				result = (List<TemperatureMeasurement>) query.list();
+			}
+		}
+
+		logger.info("Fetched " + result.size() + " new results after ID "
+				+ tmesID);
+
+		return result;
+	}
+
 }
