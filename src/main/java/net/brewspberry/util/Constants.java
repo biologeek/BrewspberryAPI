@@ -38,7 +38,9 @@ public abstract class Constants {
 	public static String DEVICES_PROPERTIES = PROJECT_ROOT_PATH+"/"+BREW_CONF+"/devices.properties";
 	
 	public static String CONFIG_PROPERTIES = PROJECT_ROOT_PATH+"/"+BREW_CONF+"/config.properties";
-	
+
+	public static String BATCHES_PROPERTIES = PROJECT_ROOT_PATH+"/"+BREW_CONF+"/batches.properties";
+
 
 
 	public Constants() {

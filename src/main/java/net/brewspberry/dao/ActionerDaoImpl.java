@@ -3,8 +3,10 @@ package net.brewspberry.dao;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
@@ -25,6 +27,7 @@ public class ActionerDaoImpl implements IGenericDao<Actioner>,
 			.toString());
 
 	Session session = HibernateUtil.getSession();
+	StatelessSession statelessSession = HibernateUtil.getStatelessSession();
 
 	@Override
 	public Actioner save(Actioner arg0) throws DAOException {
@@ -150,13 +153,14 @@ public class ActionerDaoImpl implements IGenericDao<Actioner>,
 	@Override
 	public Actioner getActionerByFullCharacteristics(Actioner actioner) {
 
-		String hqlReq = "from " + Actioner.class + " WHERE act_bra_id = "
-				+ actioner.getAct_brassin().getBra_id() + " AND act_etp_id = "
-				+ actioner.getAct_etape().getEtp_id() + " AND act_type = "
-				+ actioner.getAct_type() + " AND act_uuid = "
-				+ actioner.getAct_uuid();
+		Criteria crit = session.createCriteria(Actioner.class); 
+				crit.add(Restrictions.eq("act_bra_id", actioner.getAct_brassin().getBra_id()));
+				crit.add(Restrictions.eq("act_etp_id", actioner.getAct_etape().getEtp_id()));
+				crit.add(Restrictions.eq("act_type", actioner.getAct_type()));
+				crit.add(Restrictions.eq("act_uuid", actioner.getAct_uuid()));
+//				
 
-		Actioner result = (Actioner) session.createQuery(hqlReq).uniqueResult();
+		Actioner result = (Actioner) crit.uniqueResult();
 
 		HibernateUtil.closeSession();
 

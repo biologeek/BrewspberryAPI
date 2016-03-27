@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import net.brewspberry.business.IGenericDao;
 import net.brewspberry.business.IGenericService;
@@ -19,6 +20,9 @@ import net.brewspberry.business.beans.Etape;
 import net.brewspberry.business.beans.TemperatureMeasurement;
 import net.brewspberry.dao.TemperatureMeasurementDaoImpl;
 import net.brewspberry.exceptions.DAOException;
+import net.brewspberry.util.ConfigLoader;
+import net.brewspberry.util.Constants;
+import net.brewspberry.util.LogManager;
 
 public class TemperatureMeasurementServiceImpl implements
 		ISpecificTemperatureMeasurementService,
@@ -35,6 +39,8 @@ public class TemperatureMeasurementServiceImpl implements
 
 	private IGenericDao<TemperatureMeasurement> tmesDao = new TemperatureMeasurementDaoImpl();
 	private ISpecificTemperatureMeasurementService tmesSpecDao = new TemperatureMeasurementDaoImpl();
+	
+	static final Logger logger = LogManager.getInstance(TemperatureMeasurementServiceImpl.class.getName());
 
 	@Override
 	public List<TemperatureMeasurement> getTemperatureMeasurementByBrassin(
@@ -322,8 +328,40 @@ public class TemperatureMeasurementServiceImpl implements
 
 	@Override
 	public List<TemperatureMeasurement> getTemperatureMeasurementsAfterID(
-			Etape etape, String uuid, long tmesID) {
+			Etape etape, String uuid, long tmesID, int range) {
 
-		return tmesSpecDao.getTemperatureMeasurementsAfterID(etape, uuid, tmesID);
+		/*
+		 * In service, modulo is time range in minutes. 
+		 * It will be transformed in modulo depending on 
+		 * time range and record delay
+		 */
+		int delay = Integer.parseInt(ConfigLoader.getConfigByKey(Constants.BATCHES_PROPERTIES, "brewspberry.batches.threads.delay"));
+		int maxPointsOnChart = Integer.parseInt(ConfigLoader.getConfigByKey(Constants.CONFIG_PROPERTIES, "param.chart.maxPointsOnChart"));
+		
+		/*
+		 * 
+		 * Calculates the number of points that will be fetched from database 
+		 * - range is the range that the user wants to be displayed in minutes
+		 * 
+		 *  
+		 */
+		float nbRec = 60000/delay*range;
+		int modulo = 1;
+		
+		
+		logger.fine("delay : "+delay+" range : "+range);
+		
+		if (nbRec > maxPointsOnChart){
+			
+			modulo = (int) (nbRec/maxPointsOnChart);
+			
+		}
+		logger.fine("NbRec : "+nbRec+" maxPoints : "+maxPointsOnChart+" modulo : "+modulo);
+		
+		List<TemperatureMeasurement> result = tmesSpecDao.getTemperatureMeasurementsAfterID(etape, uuid, tmesID, modulo);
+		
+		logger.info("Retrieved "+result.size()+" results");
+		
+		return result;
 	}
 }
