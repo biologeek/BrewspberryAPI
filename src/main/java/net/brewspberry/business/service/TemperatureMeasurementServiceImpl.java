@@ -293,37 +293,37 @@ public class TemperatureMeasurementServiceImpl implements
 	@Override
 	public TemperatureMeasurement update(TemperatureMeasurement arg0) {
 		// TODO Auto-generated method stub
-		return null;
+		return tmesDao.update(arg0);
 	}
 
 	@Override
 	public TemperatureMeasurement getElementById(long id) {
 		// TODO Auto-generated method stub
-		return null;
+		return tmesDao.getElementById(id);
 	}
 
 	@Override
 	public List<TemperatureMeasurement> getAllElements() {
-		// TODO Auto-generated method stub
-		return null;
+		// TODO tme-generated method stub
+		return tmesDao.getAllElements();
 	}
 
 	@Override
 	public void deleteElement(long id) {
-		// TODO Auto-generated method stub
+		tmesDao.deleteElement(id);
 
 	}
 
 	@Override
 	public void deleteElement(TemperatureMeasurement arg0) {
 		// TODO Auto-generated method stub
-
+		tmesDao.deleteElement(arg0);
 	}
 
 	@Override
 	public List<TemperatureMeasurement> getAllDistinctElements() {
 		// TODO Auto-generated method stub
-		return null;
+		return tmesDao.getAllDistinctElements();
 	}
 
 	@Override
