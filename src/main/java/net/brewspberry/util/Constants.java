@@ -23,9 +23,9 @@ public abstract class Constants {
 	public static int ACT_FAILED = 999;
 
 	
-	public static String ACT_DS18B20 = "ds18b20";
-	public static String ACT_PUMP = "pump";
-	public static String ACT_ENGINE = "engine";
+	public static String ACT_DS18B20 = "1";
+	public static String ACT_PUMP = "2";
+	public static String ACT_ENGINE = "3";
 	
 	//	public static String PROJECT_ROOT_PATH = "/home/xavier/ownCloud/Projets/Brewhouse/Code";
 	public static String PROJECT_ROOT_PATH = "/opt/tomcat/webapps";

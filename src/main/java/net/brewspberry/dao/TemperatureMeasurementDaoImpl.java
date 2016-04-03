@@ -302,11 +302,13 @@ public class TemperatureMeasurementDaoImpl implements
 		if (etape != null) {
 			if (tmesID > 0) {
 
-				query = session.createCriteria(TemperatureMeasurement.class)
+				query = session
+						.createCriteria(TemperatureMeasurement.class)
 						.add(Restrictions.gt("tmes_id", tmesID))
 						.add(Restrictions.eq("tmes_etape", etape))
 						.add(Restrictions.gt("tmes_date", cal.getTime()))
-						.add(Restrictions.sqlRestriction("tmes_id mod "+modulo+" = 0"));
+						.add(Restrictions.sqlRestriction("tmes_id mod "
+								+ modulo + " = 0"));
 
 				if (uuid != null && !uuid.equals("all")) {
 					logger.info("added UUID restriction");
@@ -324,5 +326,29 @@ public class TemperatureMeasurementDaoImpl implements
 
 		return result;
 	}
+
+	@Override
+	public List<TemperatureMeasurement> getLastTemperatureByStepAndUUID(
+			Etape stepID, String uuid) {
+
+		List<TemperatureMeasurement> result = new ArrayList<TemperatureMeasurement>();
+
+		Session session = HibernateUtil.getSession();
+
+		Criteria crit = session.createCriteria(TemperatureMeasurement.class);
+		crit.add(Restrictions.eq("tmes_etape", stepID));
+		crit.add(Restrictions.eq("tmes_probeUI", uuid));
+		crit.addOrder(Order.desc("tmes_date"));
+		
+		if (!uuid.equals("") || !uuid.equalsIgnoreCase("all")){
+			
+			crit.setMaxResults(1);
+		
+		}
+		
+		return result;
+	}
+	
+	
 
 }

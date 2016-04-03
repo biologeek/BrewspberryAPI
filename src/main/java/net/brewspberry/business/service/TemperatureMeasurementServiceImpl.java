@@ -364,4 +364,33 @@ public class TemperatureMeasurementServiceImpl implements
 		
 		return result;
 	}
+
+	@Override
+	public List<TemperatureMeasurement> getLastTemperatureByStepAndUUID(
+			Etape stepID, String uuid) {
+		
+		List<TemperatureMeasurement> result = new ArrayList<TemperatureMeasurement>();
+		
+		
+		if (stepID != null && uuid != null){
+			if (!uuid.equals("") || !uuid.equalsIgnoreCase("all")){
+				
+				result = tmesSpecDao.getLastTemperatureByStepAndUUID(stepID, uuid);
+						
+			} else {
+				String[] p = ConfigLoader.getConfigByKey(Constants.DEVICES_PROPERTIES, "device.uuids").split(";");
+				
+				
+				//Beware : if probe was not used recently, temperature might not be accurate
+				for (String probe : p){
+					
+					result = tmesSpecDao.getLastTemperatureByStepAndUUID(stepID, probe);
+					
+				}
+				
+				
+			}
+		}
+		return result;
+	}
 }
