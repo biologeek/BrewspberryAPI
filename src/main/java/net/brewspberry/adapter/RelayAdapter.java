@@ -91,23 +91,8 @@ public class RelayAdapter {
 
 		PinState state = relay.getState();
 
-		switch (state) {
 
-		case HIGH:
-
-			result = "HIGH";
-			break;
-		case LOW:
-
-			result = "LOW";
-			break;
-		default:
-
-			result = "LOW";
-			break;
-
-		}
-		return result;
+		return this.getStateAsString(state);
 	}
 	
 	public String getStateAsString(PinState state) {

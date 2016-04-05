@@ -193,11 +193,18 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 	private Actioner startActionInDatabase(Actioner arg0)
 			throws ServiceException, NotAppropriateStatusException {
 
+		boolean isAlreadyStored = false;
 		/*
 		 * Starts the action and saves it in database.
+		 * If an actioner already exists for this step, brew type and UUID, no need to recreate it, just update previous one 
 		 */
 
-		Actioner result = null;
+		Actioner result = actionerSpecDao.getActionerByFullCharacteristics(arg0);
+		
+		if (result != null){
+			isAlreadyStored = true;
+		}
+		
 		if (arg0.getAct_date_debut() == null) {
 			arg0.setAct_date_debut(new Date());
 			arg0.setAct_status(Constants.ACT_RUNNING);
@@ -209,7 +216,11 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 		} else
 			throw new NotAppropriateStatusException();
 		try {
-			result = this.save(arg0);
+			if(isAlreadyStored && arg0.getAct_id() >= 0) {
+				result = this.update(arg0);
+			} else {
+				result = this.save(arg0);
+			}
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
 			throw new ServiceException("Couldn't save Actioner "
@@ -322,7 +333,7 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 						args[4] = String.valueOf(actioner.getAct_id());
 
 						
-						logger.info(String.join(";", args));
+						logger.fine("Launching batch thread for "+duration+" "+args[0]);
 						temperatureBatch = new BatchRecordTemperatures(args);
 
 						recordTemperatureBatch = new Thread(
@@ -343,7 +354,8 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 
 				break;
 
-			case "2":
+			case "2" :
+			case "3" :
 
 				// Relay
 				logger.info("It's a relay !");
