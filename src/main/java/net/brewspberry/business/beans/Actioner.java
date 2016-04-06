@@ -43,7 +43,7 @@ public class Actioner {
 	@JoinColumn(name = "act_etp_id")
 	public Etape act_etape;
 	
-	@OneToMany(fetch=FetchType.EAGER, mappedBy="tmes_actioner")
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="tmes_actioner")
 	List<TemperatureMeasurement> act_temperature_measurements;
 
 	public Actioner() {

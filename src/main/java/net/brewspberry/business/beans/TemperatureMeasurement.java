@@ -38,7 +38,7 @@ public class TemperatureMeasurement implements Serializable,
 	@JoinColumn(name = "tmes_bra_id")
 	private Brassin tmes_brassin;
 
-	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Actioner.class)
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Actioner.class)
 	@JoinColumn(name = "tmes_act_id")
 	private Actioner tmes_actioner;
 

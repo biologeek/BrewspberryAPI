@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.brewspberry</groupId>
 	<artifactId>brewspberry-core</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<name>brewspberry-core</name>
 	<description>Core of BrewspberryPi project</description>
 

@@ -154,8 +154,8 @@ public class ActionerDaoImpl implements IGenericDao<Actioner>,
 	public Actioner getActionerByFullCharacteristics(Actioner actioner) {
 
 		Criteria crit = session.createCriteria(Actioner.class); 
-				crit.add(Restrictions.eq("act_bra_id", actioner.getAct_brassin().getBra_id()));
-				crit.add(Restrictions.eq("act_etp_id", actioner.getAct_etape().getEtp_id()));
+				crit.add(Restrictions.eq("act_brassin", actioner.getAct_brassin()));
+				crit.add(Restrictions.eq("act_etape", actioner.getAct_etape()));
 				crit.add(Restrictions.eq("act_type", actioner.getAct_type()));
 				crit.add(Restrictions.eq("act_uuid", actioner.getAct_uuid()));
 //				
