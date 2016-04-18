@@ -44,7 +44,7 @@ public class ActionerDaoImpl implements IGenericDao<Actioner>,
 			} else {
 
 				logger.severe("Oh, I think we got a problem here : act_id = "
-						+ actID);
+						+ actID+" and origin ="+arg0.getAct_id());
 			}
 		} catch (HibernateException e) {
 			tx.rollback();
@@ -152,16 +152,30 @@ public class ActionerDaoImpl implements IGenericDao<Actioner>,
 
 	@Override
 	public Actioner getActionerByFullCharacteristics(Actioner actioner) {
+		Actioner result;
+		List<Actioner> listResult;
 
-		Criteria crit = session.createCriteria(Actioner.class); 
-				crit.add(Restrictions.eq("act_brassin", actioner.getAct_brassin()));
-				crit.add(Restrictions.eq("act_etape", actioner.getAct_etape()));
-				crit.add(Restrictions.eq("act_type", actioner.getAct_type()));
-				crit.add(Restrictions.eq("act_uuid", actioner.getAct_uuid()));
-//				
+		logger.info("DAO from Actioner WHERE act_bra_id = "
+				 			+ actioner.getAct_brassin().getBra_id() + " AND act_etp_id = "
+				 			+ actioner.getAct_etape().getEtp_id() + " AND act_type = '"
+				 			+ actioner.getAct_type() + "' AND act_uuid = '"
+				 			+ actioner.getAct_uuid()+"' order by act_id");
+		
+		String hqlReq = "from Actioner WHERE act_bra_id = "
+				 			+ actioner.getAct_brassin().getBra_id() + " AND act_etp_id = "
+				 			+ actioner.getAct_etape().getEtp_id() + " AND act_type = '"
+				 			+ actioner.getAct_type() + "' AND act_uuid = '"
+				 			+ actioner.getAct_uuid()+"' order by act_id";		
 
-		Actioner result = (Actioner) crit.uniqueResult();
+		listResult = ((List<Actioner>) session.createQuery(hqlReq).list());
 
+		if (listResult.size() > 0){
+			
+			result = listResult.get(0);
+		} else {
+			result = null;
+		}
+		
 		HibernateUtil.closeSession();
 
 		return result;

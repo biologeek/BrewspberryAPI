@@ -216,7 +216,8 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 		} else
 			throw new NotAppropriateStatusException();
 		try {
-			if(isAlreadyStored && arg0.getAct_id() >= 0) {
+			if(isAlreadyStored && arg0.getAct_id() > 0) {
+				
 				result = this.update(arg0);
 			} else {
 				result = this.save(arg0);
@@ -597,7 +598,7 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 
 		}
 
-		return arg0;
+		return result;
 	}
 
 	/**
