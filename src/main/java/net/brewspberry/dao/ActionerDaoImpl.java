@@ -35,7 +35,7 @@ public class ActionerDaoImpl implements IGenericDao<Actioner>,
 		Long actID;
 
 		try {
-			logger.info("Saving Actioner whith uuid " + arg0.getAct_uuid());
+			logger.info("Saving Actioner with uuid " + arg0.getAct_uuid());
 			actID = (Long) session.save(arg0);
 
 			tx.commit();
@@ -150,20 +150,28 @@ public class ActionerDaoImpl implements IGenericDao<Actioner>,
 		return (List<Actioner>) session.createQuery("from Actioner");
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
+	/**
+	 * Retrieves actioner by : 
+	 *  - Brew ID
+	 *  - Step ID
+	 *  - Type
+	 *  -  UUID
+	 */
 	public Actioner getActionerByFullCharacteristics(Actioner actioner) {
 		Actioner result;
 		List<Actioner> listResult;
 
-		logger.info("DAO from Actioner WHERE act_bra_id = "
-				 			+ actioner.getAct_brassin().getBra_id() + " AND act_etp_id = "
-				 			+ actioner.getAct_etape().getEtp_id() + " AND act_type = '"
+		logger.info("DAO from Actioner WHERE act_brassin = "
+				 			+ actioner.getAct_brassin() + " AND act_etape = "
+				 			+ actioner.getAct_etape() + " AND act_type = '"
 				 			+ actioner.getAct_type() + "' AND act_uuid = '"
 				 			+ actioner.getAct_uuid()+"' order by act_id");
 		
-		String hqlReq = "from Actioner WHERE act_bra_id = "
-				 			+ actioner.getAct_brassin().getBra_id() + " AND act_etp_id = "
-				 			+ actioner.getAct_etape().getEtp_id() + " AND act_type = '"
+		String hqlReq = "from Actioner WHERE act_brassin = "
+				 			+ actioner.getAct_brassin() + " AND act_etape = "
+				 			+ actioner.getAct_etape() + " AND act_type = '"
 				 			+ actioner.getAct_type() + "' AND act_uuid = '"
 				 			+ actioner.getAct_uuid()+"' order by act_id";		
 

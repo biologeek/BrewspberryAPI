@@ -1,7 +1,6 @@
 package net.brewspberry.business.service;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -10,8 +9,6 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.hibernate.engine.jdbc.batch.internal.BatchBuilderImpl;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
@@ -115,6 +112,19 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 		return actionerSpecDao.getActionnerByEtape(etape);
 	}
 
+	
+	/**
+	 * Deprecated if using java batches
+	 * 
+	 * @param which
+	 * @param uuid
+	 * @param brassin
+	 * @param etape
+	 * @return
+	 * @throws IOException
+	 * @throws ServiceException
+	 */
+	@Deprecated
 	public List<Actioner> getRealTimeActionersByName(List<String> which,
 			Boolean uuid, Brassin brassin, Etape etape) throws IOException,
 			ServiceException {
@@ -190,16 +200,21 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 		return result;
 	}
 
+	/**
+	 * Starts the action and saves it in database.
+	 * If an actioner already exists for this step, brew type and UUID, no need to recreate it, just update previous one 
+	 * @param arg0
+	 * @return
+	 * @throws ServiceException
+	 * @throws NotAppropriateStatusException
+	 */
 	private Actioner startActionInDatabase(Actioner arg0)
 			throws ServiceException, NotAppropriateStatusException {
 
 		boolean isAlreadyStored = false;
-		/*
-		 * Starts the action and saves it in database.
-		 * If an actioner already exists for this step, brew type and UUID, no need to recreate it, just update previous one 
-		 */
-
+	
 		Actioner result = actionerSpecDao.getActionerByFullCharacteristics(arg0);
+		
 		
 		if (result != null){
 			isAlreadyStored = true;
@@ -213,14 +228,19 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 		if (arg0.getAct_activated() == false && arg0.getAct_used() == false) {
 
 			arg0.setAct_activated(true);
+			
 		} else
 			throw new NotAppropriateStatusException();
 		try {
+			logger.info("Situation : is alread stored ? " + isAlreadyStored+" Actionner ID : "+arg0.getAct_id());
 			if(isAlreadyStored && arg0.getAct_id() > 0) {
 				
 				result = this.update(arg0);
+				
 			} else {
+				
 				result = this.save(arg0);
+				
 			}
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
