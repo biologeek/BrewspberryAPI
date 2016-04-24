@@ -38,24 +38,12 @@ public class RelayAdapter {
 		return null;
 	}
 
-	public Boolean changePinState(Pin pin) {
+	public PinState changePinState(GpioPinDigitalOutput pin) {
 
-		Boolean result = null;
-		GpioPinDigitalOutput relay = gpioController
-				.provisionDigitalOutputPin(pin);
-
-		PinState state = relay.getState();
-
-		if (state == PinState.HIGH) {
-			relay.setState(PinState.LOW);
-			result = false;
-
-		} else if (state == PinState.LOW) {
-			relay.setState(PinState.HIGH);
-			result = true;
-		}
-
-		return result;
+		
+		pin.toggle();
+		
+		return pin.getState();
 	}
 	
 	/**
@@ -64,32 +52,28 @@ public class RelayAdapter {
 	 * @param newPinState
 	 * @return
 	 */
-	public Boolean changePinState(Pin pin, PinState newPinState) {
+	public Boolean changePinState(GpioPinDigitalOutput pin, PinState newPinState) {
 
 		Boolean result = null;
-		GpioPinDigitalOutput relay = gpioController
-				.provisionDigitalOutputPin(pin);
 
-		PinState state = relay.getState();
+		PinState state = pin.getState();
 
 		if (state == newPinState) {
 			logger.info("Not changing state as state="+this.getStateAsString(state));
 
 		} else if (state == PinState.LOW) {
-			relay.setState(PinState.HIGH);
+			pin.setState(PinState.HIGH);
 			result = true;
 		}
 
 		return result;
 	}
 
-	public String getStateAsString(Pin device) {
+	public String getStateAsString(GpioPinDigitalOutput device) {
 
 		String result = "";
-		GpioPinDigitalOutput relay = gpioController
-				.provisionDigitalOutputPin(device);
-
-		PinState state = relay.getState();
+		
+		PinState state = device.getState();
 
 
 		return this.getStateAsString(state);

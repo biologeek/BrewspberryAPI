@@ -377,7 +377,9 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 
 			case "2" :
 			case "3" :
-
+				GpioPinDigitalOutput gpio = gpioController
+				.provisionDigitalOutputPin(Constants.BREW_GPIO
+						.get(actioner.getAct_raspi_pin()));
 				// Relay
 				logger.info("It's a relay !");
 
@@ -389,11 +391,9 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 							+ Constants.BREW_GPIO.get(actioner
 									.getAct_raspi_pin()));
 					try {
-
+						
 						// Turning ON or OFF the pin
-						relayAdapter.changePinState(Constants.BREW_GPIO
-								.get(actioner.getAct_raspi_pin()),
-								PinState.HIGH);
+						PinState state = relayAdapter.changePinState(gpio);
 
 						actioner.setAct_status(Constants.ACT_RUNNING);
 						logger.fine("Actioner at pin "
@@ -413,13 +413,6 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 
 				} else {
 					throw new Exception("Empty Pin !!");
-				}
-
-				if (relayAdapter.getStateAsString(Constants.BREW_GPIO
-						.get(actioner.getAct_raspi_pin())) != "HIGH") {
-
-					throw new Exception(
-							"PinState not high, State change failed !");
 				}
 
 				break;
@@ -541,9 +534,9 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 								.provisionDigitalOutputPin(Constants.BREW_GPIO
 										.get(actioner.getAct_raspi_pin()));
 
-						if (gpio.getState() == PinState.HIGH) {
+						if (gpio.getState().equals(PinState.HIGH)) {
 
-							gpio.setState(PinState.LOW);
+							relayAdapter.changePinState(gpio);
 
 							// Not recording relay actions as therre may be more
 							// than one
