@@ -414,6 +414,8 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 				} else {
 					throw new Exception("Empty Pin !!");
 				}
+				
+				gpioController.unprovisionPin(gpio);
 
 				break;
 
@@ -521,6 +523,7 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 							actioner = this.stopActionInDatabase(actioner);
 						}
 					}
+					gpioController.shutdown();
 
 					break;
 
@@ -528,9 +531,9 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 
 					// Relay
 
+					GpioPinDigitalOutput gpio = null;
 					if (actioner.getAct_raspi_pin() != null) {
-
-						GpioPinDigitalOutput gpio = gpioController
+						gpio = gpioController
 								.provisionDigitalOutputPin(Constants.BREW_GPIO
 										.get(actioner.getAct_raspi_pin()));
 
@@ -544,6 +547,9 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 						}
 
 					}
+					
+					gpioController.unprovisionPin(gpio);
+
 					break;
 
 				}
