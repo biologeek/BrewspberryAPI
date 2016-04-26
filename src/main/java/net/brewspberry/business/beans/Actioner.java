@@ -170,8 +170,7 @@ public class Actioner {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((act_activated == null) ? 0 : act_activated.hashCode());
+		result = prime * result + (act_activated ? 1231 : 1237);
 		result = prime * result
 				+ ((act_brassin == null) ? 0 : act_brassin.hashCode());
 		result = prime * result
@@ -191,8 +190,7 @@ public class Actioner {
 						: act_temperature_measurements.hashCode());
 		result = prime * result
 				+ ((act_type == null) ? 0 : act_type.hashCode());
-		result = prime * result
-				+ ((act_used == null) ? 0 : act_used.hashCode());
+		result = prime * result + (act_used ? 1231 : 1237);
 		result = prime * result
 				+ ((act_uuid == null) ? 0 : act_uuid.hashCode());
 		return result;
@@ -207,10 +205,7 @@ public class Actioner {
 		if (getClass() != obj.getClass())
 			return false;
 		Actioner other = (Actioner) obj;
-		if (act_activated == null) {
-			if (other.act_activated != null)
-				return false;
-		} else if (!act_activated.equals(other.act_activated))
+		if (act_activated != other.act_activated)
 			return false;
 		if (act_brassin == null) {
 			if (other.act_brassin != null)
@@ -257,10 +252,7 @@ public class Actioner {
 				return false;
 		} else if (!act_type.equals(other.act_type))
 			return false;
-		if (act_used == null) {
-			if (other.act_used != null)
-				return false;
-		} else if (!act_used.equals(other.act_used))
+		if (act_used != other.act_used)
 			return false;
 		if (act_uuid == null) {
 			if (other.act_uuid != null)
@@ -270,5 +262,6 @@ public class Actioner {
 		return true;
 	}
 
+	
 	
 }

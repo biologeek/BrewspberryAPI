@@ -17,7 +17,7 @@
 			<groupId>net.brewspberry</groupId>
 			<artifactId>brewspberry-jbatches</artifactId>
 			<version>0.1.0-SNAPSHOT</version>
-			<scope>compile</scope>
+			<scope>system</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.pi4j</groupId>

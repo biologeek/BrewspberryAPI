@@ -523,7 +523,6 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 							actioner = this.stopActionInDatabase(actioner);
 						}
 					}
-					gpioController.shutdown();
 
 					break;
 
@@ -548,8 +547,8 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 
 					}
 					
-					gpioController.unprovisionPin(gpio);
 
+					relayAdapter.setShutdownOptionsandShutdown(gpioController,gpio , PinState.LOW, true);
 					break;
 
 				}

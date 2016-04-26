@@ -2,13 +2,16 @@ package net.brewspberry.adapter;
 
 import java.util.logging.Logger;
 
+import net.brewspberry.util.Constants;
 import net.brewspberry.util.LogManager;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPin;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinState;
+import com.pi4j.wiringpi.Gpio;
 
 public class RelayAdapter {
 	/**
@@ -64,6 +67,9 @@ public class RelayAdapter {
 		} else if (state.equals(PinState.LOW)) {
 			pin.setState(PinState.HIGH);
 			result = true;
+		}else if (state.equals(PinState.HIGH)) {
+			pin.setState(PinState.LOW);
+			result = true;
 		}
 
 		return result;
@@ -104,5 +110,13 @@ public class RelayAdapter {
 	}
 	
 	
-	public void setShutdownOptionsandShutdown ()
+	public void setShutdownOptionsandShutdown (GpioController controller, GpioPin pin, PinState state, boolean unexport){
+		
+		pin.setShutdownOptions(unexport, state);
+		
+		logger.info("Shutting down "+Constants.BREW_GPIO_TO_STR.get(pin));
+		
+		controller.shutdown();;
+		
+	}
 }
