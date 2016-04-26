@@ -58,10 +58,10 @@ public class RelayAdapter {
 
 		PinState state = pin.getState();
 
-		if (state == newPinState) {
+		if (state.equals(newPinState)) {
 			logger.info("Not changing state as state="+this.getStateAsString(state));
 
-		} else if (state == PinState.LOW) {
+		} else if (state.equals(PinState.LOW)) {
 			pin.setState(PinState.HIGH);
 			result = true;
 		}

@@ -445,7 +445,7 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 		if (actioner != null && actioner.getAct_id() != 0) {
 
 			if (ConfigLoader.getConfigByKey(Constants.CONFIG_PROPERTIES,
-					"param.batches.language") == "java") {
+					"param.batches.language").equals("java")) {
 
 				if (recordTemperatureBatch != null) {
 
@@ -468,7 +468,7 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 				}
 
 			} else if (ConfigLoader.getConfigByKey(Constants.CONFIG_PROPERTIES,
-					"param.batches.language") == "python") {
+					"param.batches.language").equals("python")) {
 				switch (actioner.getAct_type()) {
 
 				case "1":

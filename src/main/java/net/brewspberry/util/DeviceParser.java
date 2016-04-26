@@ -133,7 +133,7 @@ public class DeviceParser extends ConfigLoader {
 						+ device.getAct_id());
 				logger.info("Actioner : " + actioner.getAct_uuid() + " "
 						+ actioner.getAct_id());
-				if (device.getAct_uuid() == actioner.getAct_uuid()) {
+				if (device.getAct_uuid().equals(actioner.getAct_uuid())) {
 
 					if (found) {
 

@@ -32,8 +32,8 @@ public class Actioner {
 	public Date act_date_debut;
 	public Date act_date_fin;
 	public String act_raspi_pin;
-	public Boolean act_activated;
-	public Boolean act_used;
+	public boolean act_activated;
+	public boolean act_used;
 
 	@ManyToOne
 	@JoinColumn(name = "act_bra_id")
@@ -58,11 +58,11 @@ public class Actioner {
 		this.act_id = act_id;
 	}
 
-	public Boolean getAct_activated() {
+	public boolean getAct_activated() {
 		return act_activated;
 	}
 
-	public void setAct_activated(Boolean act_activated) {
+	public void setAct_activated(boolean act_activated) {
 		this.act_activated = act_activated;
 	}
 
@@ -98,11 +98,11 @@ public class Actioner {
 		this.act_etape = act_etape;
 	}
 
-	public Boolean getAct_used() {
+	public boolean getAct_used() {
 		return act_used;
 	}
 
-	public void setAct_used(Boolean act_used) {
+	public void setAct_used(boolean act_used) {
 		this.act_used = act_used;
 	}
 
