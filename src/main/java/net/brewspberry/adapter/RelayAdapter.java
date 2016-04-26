@@ -102,4 +102,7 @@ public class RelayAdapter {
 		}
 		return result;
 	}
+	
+	
+	public void setShutdownOptionsandShutdown ()
 }
