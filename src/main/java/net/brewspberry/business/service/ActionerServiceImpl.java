@@ -17,7 +17,6 @@ import com.pi4j.io.gpio.PinState;
 
 import net.brewspberry.adapter.RelayAdapter;
 import net.brewspberry.batches.launchers.Batch;
-import net.brewspberry.batches.launchers.BatchRecordTemperatures;
 import net.brewspberry.business.IGenericDao;
 import net.brewspberry.business.IGenericService;
 import net.brewspberry.business.ISpecificActionerDao;
@@ -355,7 +354,7 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 
 						
 						logger.fine("Launching batch thread for "+duration+" "+args[0]);
-						temperatureBatch = new BatchRecordTemperatures(args);
+						//temperatureBatch = new BatchRecordTemperatures(args);
 
 						recordTemperatureBatch = new Thread(
 								(Runnable) temperatureBatch);
