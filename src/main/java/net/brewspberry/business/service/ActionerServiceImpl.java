@@ -17,7 +17,6 @@ import com.pi4j.io.gpio.PinState;
 
 import net.brewspberry.adapter.RelayAdapter;
 import net.brewspberry.batches.launchers.Batch;
-import net.brewspberry.batches.launchers.BatchRecordTemperatures;
 import net.brewspberry.business.IGenericDao;
 import net.brewspberry.business.IGenericService;
 import net.brewspberry.business.ISpecificActionerDao;
@@ -355,10 +354,10 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 
 						
 						logger.fine("Launching batch thread for "+duration+" "+args[0]);
-						temperatureBatch = new BatchRecordTemperatures(args);
+						//temperatureBatch = new BatchRecordTemperatures(args);
 
-						recordTemperatureBatch = new Thread(
-								(Runnable) temperatureBatch);
+	//					recordTemperatureBatch = new Thread(
+		//						(Runnable) temperatureBatch);
 
 						recordTemperatureBatch.start();
 
@@ -396,7 +395,7 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 						PinState state = relayAdapter.changePinState(gpio);
 
 						actioner.setAct_status(Constants.ACT_RUNNING);
-						logger.fine("Actioner at pin "
+						logger.info("Actioner at pin "
 								+ actioner.getAct_raspi_pin()
 								+ " changed state to "
 								+ actioner.getAct_status());

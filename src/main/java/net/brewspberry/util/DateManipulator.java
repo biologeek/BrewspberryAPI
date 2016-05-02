@@ -16,6 +16,17 @@ import net.brewspberry.business.beans.DurationBO;
 public class DateManipulator {
 
 	private static DateManipulator dateManipulator;
+	
+	private String[] patterns = new String[]{
+			"^(19|20)\\d\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01]) [012][0-9]:[0-5]\\d:[0-5]\\d", //yyyy-mm-dd HH:mm:ss
+			"^(19|20)\\d\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01]) [012][0-9]:[0-5]\\d:[0-5]\\d\\.\\d\\d\\d\\d", //yyyy-mm-dd HH:mm:ss.SSSS
+			"^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\\d\\d [012][0-9]:[0-5]\\d:[0-5]\\d", //dd/mm/yyyy HH:mm:ss
+			"^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\\d\\d [012][0-9]:[0-5]\\d:[0-5]\\d\\.\\d\\d\\d\\d", //dd/mm/yyyy HH:mm:ss.SSSS
+	};
+	
+	private DateManipulator(){
+		
+	}
 
 	public static DateManipulator getInstance() {
 
@@ -109,4 +120,53 @@ public class DateManipulator {
 
 	}
 
+	
+	public Date formatDateFromVariousPatterns(String date){
+		
+		Date result = new Date();
+		int id = 0;
+		
+		int year;
+		int month;
+		int day;
+		int hour;
+		int minute;
+		int second;
+		int milisecond;
+		
+		for (String pattern : patterns){
+			
+			if (date.matches(pattern)){
+				
+				break;
+				
+			}
+			
+			id++;			
+		}
+		
+		
+		switch (id) {
+		
+		
+		case 0:
+			
+			year = Integer.parseInt(date.substring(0,3)); 
+			month = Integer.parseInt(date.substring(5,6)); 
+			day = Integer.parseInt(date.substring(8,9)); 
+			hour = Integer.parseInt(date.substring(11,12)); 
+			minute = Integer.parseInt(date.substring(11,12)); 
+			second = Integer.parseInt(date.substring(11,12)); 
+			
+		case 1:
+			
+			break;
+		
+		
+		}
+		
+		
+		
+		return result;
+	}
 }

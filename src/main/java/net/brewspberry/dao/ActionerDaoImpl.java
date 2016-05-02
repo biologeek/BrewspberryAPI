@@ -166,7 +166,7 @@ public class ActionerDaoImpl implements IGenericDao<Actioner>,
 				 			+ actioner.getAct_brassin().getBra_id() + " AND act_etape = "
 				 			+ actioner.getAct_etape().getEtp_id() + " AND act_type = '"
 				 			+ actioner.getAct_type() + "' AND act_uuid = '"
-				 			+ actioner.getAct_uuid()+"' order by act_id";		
+				 			+ actioner.getAct_uuid()+"' order by act_id DESC";		
 
 		listResult = ((List<Actioner>) session.createQuery(hqlReq).list());
 
