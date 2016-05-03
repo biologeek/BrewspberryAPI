@@ -292,140 +292,16 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 	 * It also stores the Actioner in database
 	 */
 	@Override
+	@Deprecated
 	public Actioner startAction(Actioner actioner) throws Exception {
 
-		Etape currentStep = null;
-		String duration = "";
-		String[] args = new String[5];
-
-		if (actioner != null) {
-
-			logger.fine(actioner.getAct_etape() + " "
-					+ actioner.getAct_brassin());
-			switch (actioner.getAct_type()) {
-
-			case "1":
-				// DS18B20
-
-				/*
-				 * When loading ds18b20, it executes in a separate thread a time
-				 * limited batch to record temperatures
-				 * 
-				 * Requires act_type, act_brassin, act_etape, name, uuid
-				 */
-
-				String durationCoef = ConfigLoader.getConfigByKey(
-						Constants.CONFIG_PROPERTIES,
-						"param.batches.length.coef");
-
-				logger.info("It's a DS18B20 :");
-
-
-				logger.fine("Duree : " + actioner.getAct_etape().getEtp_duree());
-				logger.fine("Duree");
-				try {
-					if (actioner.getAct_brassin() != null
-							&& actioner.getAct_etape() != null) {
-
-						currentStep = actioner.getAct_etape();
-
-						/*
-						 * Duration of step converted in Minutes * Coefficient =
-						 * recommended time In case thread is not finished at
-						 * the end of real step, a security mechanism is to
-						 * interrupt it.
-						 * 
-						 * Is implemented in
-						 * 
-						 * @see stopActionInDatabase
-						 */
-
-						actioner = this.startActionInDatabase(actioner);
-
-						duration = String.valueOf((double) currentStep
-								.getEtp_duree().getMinute()
-								* (Double.parseDouble(durationCoef)));
-
-						args[0] = "MINUTE";
-						args[1] = String.valueOf(duration);
-						args[2] = String.valueOf(actioner.getAct_brassin().getBra_id());
-						args[3] = String.valueOf(actioner.getAct_etape().getEtp_id());
-						args[4] = String.valueOf(actioner.getAct_id());
-
-						
-						logger.fine("Launching batch thread for "+duration+" "+args[0]);
-						//temperatureBatch = new BatchRecordTemperatures(args);
-
-	//					recordTemperatureBatch = new Thread(
-		//						(Runnable) temperatureBatch);
-
-						recordTemperatureBatch.start();
-
-					} else {
-
-						logger.warning("TemperatureMeasurement not available without Step and Brew...");
-					}
-
-				} catch (Throwable e) {
-
-					e.printStackTrace();
-					// TODO: handle exception
-				}
-
-				break;
-
-			case "2" :
-			case "3" :
-				GpioPinDigitalOutput gpio = gpioController
-				.provisionDigitalOutputPin(Constants.BREW_GPIO
-						.get(actioner.getAct_raspi_pin()));
-				// Relay
-				logger.info("It's a relay !");
-
-				if (actioner.getAct_raspi_pin() != "") {
-
-					logger.info("Provisionning pin "
-							+ actioner.getAct_raspi_pin()
-							+ " "
-							+ Constants.BREW_GPIO.get(actioner
-									.getAct_raspi_pin()));
-					try {
-						
-						// Turning ON or OFF the pin
-						PinState state = relayAdapter.changePinState(gpio);
-
-						actioner.setAct_status(Constants.ACT_RUNNING);
-						logger.info("Actioner at pin "
-								+ actioner.getAct_raspi_pin()
-								+ " changed state to "
-								+ actioner.getAct_status());
-
-					} catch (Exception e) {
-
-						logger.severe("Couldn't change Pin state..."
-								+ actioner.getAct_raspi_pin()
-								+ ", setting status to FAILED !");
-						actioner.setAct_status(Constants.ACT_FAILED);
-
-					}
-					actioner = this.startActionInDatabase(actioner);
-
-				} else {
-					throw new Exception("Empty Pin !!");
-				}
-				
-				gpioController.unprovisionPin(gpio);
-
-				break;
-
-			}
-
-		}
 		return actioner;
 
 	}
 
 	/**
+	 * 
+	 * @see BatchLauncherService
 	 * Whenever user stops an actioner (for example switch off a relay), this
 	 * method must be called !
 	 * 
@@ -440,6 +316,7 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 	 * 
 	 */
 	@Override
+	@Deprecated
 	public Actioner stopAction(Actioner actioner) throws Exception {
 		if (actioner != null && actioner.getAct_id() != 0) {
 
@@ -574,6 +451,7 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 	 * @return If the process exists, return PID as String, else empty String
 	 * @throws IOException
 	 */
+	@Override
 	public String getPIDFromPs(String line) throws IOException {
 
 		String result = null;

@@ -1,5 +1,6 @@
 package net.brewspberry.business;
 
+import java.io.IOException;
 import java.util.List;
 
 import net.brewspberry.business.beans.Actioner;
@@ -17,4 +18,6 @@ public interface ISpecificActionerService extends ISpecificActionerLauncherServi
 	public Actioner isAlreadyStoredAndActivated (Actioner arg0);
 	public Actioner startActionInDatabase (Actioner actioner) throws ServiceException, NotAppropriateStatusException;
 	public Actioner stopActionInDatabase (Actioner actioner) throws ServiceException, NotAppropriateStatusException;
+	
+	public String getPIDFromPs(String line) throws IOException;
 }
