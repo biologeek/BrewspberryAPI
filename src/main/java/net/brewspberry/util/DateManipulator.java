@@ -16,16 +16,24 @@ import net.brewspberry.business.beans.DurationBO;
 public class DateManipulator {
 
 	private static DateManipulator dateManipulator;
-	
-	private String[] patterns = new String[]{
-			"^(19|20)\\d\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01]) [012][0-9]:[0-5]\\d:[0-5]\\d", //yyyy-mm-dd HH:mm:ss
-			"^(19|20)\\d\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01]) [012][0-9]:[0-5]\\d:[0-5]\\d\\.\\d\\d\\d\\d", //yyyy-mm-dd HH:mm:ss.SSSS
-			"^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\\d\\d [012][0-9]:[0-5]\\d:[0-5]\\d", //dd/mm/yyyy HH:mm:ss
-			"^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\\d\\d [012][0-9]:[0-5]\\d:[0-5]\\d\\.\\d\\d\\d\\d", //dd/mm/yyyy HH:mm:ss.SSSS
+
+	private static String[] patterns = new String[] {
+			"^(19|20)\\d\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01]) [012][0-9]:[0-5]\\d:[0-5]\\d", // yyyy-mm-dd
+																												// HH:mm:ss
+			"^(19|20)\\d\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01]) [012][0-9]:[0-5]\\d:[0-5]\\d\\.\\d\\d\\d\\d", // yyyy-mm-dd
+																																// HH:mm:ss.SSSS
+			"^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\\d\\d [012][0-9]:[0-5]\\d:[0-5]\\d", // dd/mm/yyyy
+																												// HH:mm:ss
+			"^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\\d\\d [012][0-9]:[0-5]\\d:[0-5]\\d\\.\\d\\d\\d\\d", // dd/mm/yyyy
+			// HH:mm:ss.SSSS
+			"^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.]\\d\\d [012][0-9]:[0-5]\\d:[0-5]\\d\\.\\d\\d\\d\\d", // dd/mm/yy
+			// HH:mm:ss.SSSS
+			"^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.]\\d\\d [012][0-9]:[0-5]\\d:[0-5]\\d" // dd/mm/yy
+			// HH:mm:ss
 	};
-	
-	private DateManipulator(){
-		
+
+	private DateManipulator() {
+
 	}
 
 	public static DateManipulator getInstance() {
@@ -49,8 +57,7 @@ public class DateManipulator {
 		result.setWeek(getDurationInWeeks(diff));
 		result.setDay(getDurationInDays(diff) - getDurationInWeeks(diff) * 7);
 		result.setHour(getDurationInHours(diff) - getDurationInDays(diff) * 24);
-		result.setMinute(getDurationInMinutes(diff) - getDurationInHours(diff)
-				* 60);
+		result.setMinute(getDurationInMinutes(diff) - getDurationInHours(diff) * 60);
 		result.setSecond(diff - getDurationInMinutes(diff) * 60);
 		result.setMilisecond(0);
 
@@ -60,9 +67,8 @@ public class DateManipulator {
 
 	public String getDurationAsString(DurationBO duration) {
 
-		return duration.getWeek() + ";" + duration.getDay() + ";"
-				+ duration.getHour() + ";" + duration.getMinute() + ";"
-				+ duration.getSecond() + ";" + duration.getMilisecond();
+		return duration.getWeek() + ";" + duration.getDay() + ";" + duration.getHour() + ";" + duration.getMinute()
+				+ ";" + duration.getSecond() + ";" + duration.getMilisecond();
 	}
 
 	/**
@@ -73,8 +79,7 @@ public class DateManipulator {
 	 * @throws
 	 * 
 	 **/
-	public DurationBO buildDurationFromLongs(List<Long> durations)
-			throws Exception {
+	public DurationBO buildDurationFromLongs(List<Long> durations) throws Exception {
 		DurationBO result = new DurationBO();
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
@@ -120,53 +125,90 @@ public class DateManipulator {
 
 	}
 
-	
-	public Date formatDateFromVariousPatterns(String date){
-		
+	public static Date formatDateFromVariousPatterns(String date) {
+
 		Date result = new Date();
 		int id = 0;
-		
-		int year;
-		int month;
-		int day;
-		int hour;
-		int minute;
-		int second;
-		int milisecond;
-		
-		for (String pattern : patterns){
-			
-			if (date.matches(pattern)){
-				
+
+		int year = 0;
+		int month = 0;
+		int day = 0;
+		int hour = 0;
+		int minute = 0;
+		int second = 0;
+		int milisecond = 0;
+
+		for (String pattern : patterns) {
+
+			if (date.matches(pattern)) {
+
+				switch (id) {
+
+				case 1:
+
+					milisecond = Integer.parseInt(date.substring(20, 23));
+
+				case 0:
+
+					year = Integer.parseInt(date.substring(0, 3));
+					month = Integer.parseInt(date.substring(5, 6));
+					day = Integer.parseInt(date.substring(8, 9));
+					hour = Integer.parseInt(date.substring(11, 12));
+					minute = Integer.parseInt(date.substring(14, 15));
+					second = Integer.parseInt(date.substring(17, 18));
+
+					break;
+
+				case 3:
+
+					milisecond = Integer.parseInt(date.substring(20, 23));
+
+				case 2:
+
+					day = Integer.parseInt(date.substring(0, 1));
+					month = Integer.parseInt(date.substring(3, 4));
+					year = Integer.parseInt(date.substring(6, 9));
+					hour = Integer.parseInt(date.substring(11, 12));
+					minute = Integer.parseInt(date.substring(14, 15));
+					second = Integer.parseInt(date.substring(17, 18));
+
+					break;
+
+				case 5:
+
+					milisecond = Integer.parseInt(date.substring(18, 21));
+
+				case 4:
+
+					day = Integer.parseInt(date.substring(0, 1));
+					month = Integer.parseInt(date.substring(3, 4));
+					year = Integer.parseInt(date.substring(6, 7));
+					hour = Integer.parseInt(date.substring(9, 10));
+					minute = Integer.parseInt(date.substring(12, 13));
+					second = Integer.parseInt(date.substring(15, 16));
+
+					break;
+
+				}
+
 				break;
-				
 			}
-			
-			id++;			
+			id++;
+
 		}
 		
+		Calendar cal = Calendar.getInstance();
 		
-		switch (id) {
+		cal.setTime(result);
+		cal.set(Calendar.YEAR, year);
+		cal.set(Calendar.MONTH, month);
+		cal.set(Calendar.DAY_OF_MONTH, day);
+		cal.set(Calendar.HOUR_OF_DAY, hour);
+		cal.set(Calendar.MINUTE, minute);
+		cal.set(Calendar.SECOND, second);
+		cal.set(Calendar.MILLISECOND, milisecond);
+
 		
-		
-		case 0:
-			
-			year = Integer.parseInt(date.substring(0,3)); 
-			month = Integer.parseInt(date.substring(5,6)); 
-			day = Integer.parseInt(date.substring(8,9)); 
-			hour = Integer.parseInt(date.substring(11,12)); 
-			minute = Integer.parseInt(date.substring(11,12)); 
-			second = Integer.parseInt(date.substring(11,12)); 
-			
-		case 1:
-			
-			break;
-		
-		
-		}
-		
-		
-		
-		return result;
+		return cal.getTime();
 	}
 }

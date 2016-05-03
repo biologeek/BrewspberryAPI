@@ -207,7 +207,7 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 	 * @throws ServiceException
 	 * @throws NotAppropriateStatusException
 	 */
-	private Actioner startActionInDatabase(Actioner arg0)
+	public Actioner startActionInDatabase(Actioner arg0)
 			throws ServiceException, NotAppropriateStatusException {
 
 		boolean isAlreadyStored = false;
@@ -249,7 +249,7 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 		return result;
 	}
 
-	private Actioner stopActionInDatabase(Actioner arg0)
+	public Actioner stopActionInDatabase(Actioner arg0)
 			throws ServiceException, NotAppropriateStatusException {
 
 		/*
