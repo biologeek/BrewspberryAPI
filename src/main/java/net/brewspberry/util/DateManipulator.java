@@ -18,17 +18,17 @@ public class DateManipulator {
 	private static DateManipulator dateManipulator;
 
 	private static String[] patterns = new String[] {
-			"^(19|20)\\d\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01]) [012][0-9]:[0-5]\\d:[0-5]\\d", // yyyy-mm-dd
+			"^(19|20)\\d\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01]) [012][0-9]:[0-5]\\d:[0-5]\\d$", // yyyy-mm-dd
 																												// HH:mm:ss
-			"^(19|20)\\d\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01]) [012][0-9]:[0-5]\\d:[0-5]\\d\\.\\d\\d\\d\\d", // yyyy-mm-dd
+			"^(19|20)\\d\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01]) [012][0-9]:[0-5]\\d:[0-5]\\d\\.\\d\\d\\d\\d$", // yyyy-mm-dd
 																																// HH:mm:ss.SSSS
-			"^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\\d\\d [012][0-9]:[0-5]\\d:[0-5]\\d", // dd/mm/yyyy
+			"^(0[1-9]|[12][0-9]|3[01])[- \\/.](0[1-9]|1[012])[- \\/.](19|20)\\d\\d [012][0-9]:[0-5]\\d:[0-5]\\d$", // dd/mm/yyyy
 																												// HH:mm:ss
-			"^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\\d\\d [012][0-9]:[0-5]\\d:[0-5]\\d\\.\\d\\d\\d\\d", // dd/mm/yyyy
+			"^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\\d\\d [012][0-9]:[0-5]\\d:[0-5]\\d\\.\\d\\d\\d\\d$", // dd/mm/yyyy
 			// HH:mm:ss.SSSS
-			"^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.]\\d\\d [012][0-9]:[0-5]\\d:[0-5]\\d\\.\\d\\d\\d\\d", // dd/mm/yy
+			"^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.]\\d\\d [012][0-9]:[0-5]\\d:[0-5]\\d\\.\\d\\d\\d\\d$", // dd/mm/yy
 			// HH:mm:ss.SSSS
-			"^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.]\\d\\d [012][0-9]:[0-5]\\d:[0-5]\\d" // dd/mm/yy
+			"^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.]\\d\\d [012][0-9]:[0-5]\\d:[0-5]\\d$" // dd/mm/yy
 			// HH:mm:ss
 	};
 
@@ -137,40 +137,46 @@ public class DateManipulator {
 		int minute = 0;
 		int second = 0;
 		int milisecond = 0;
+		
+		boolean found = false;
 
 		for (String pattern : patterns) {
 
-			if (date.matches(pattern)) {
+			if (date.matches(pattern) && !found) {
 
+				System.out.println("Found for id "+id);
 				switch (id) {
 
 				case 1:
 
-					milisecond = Integer.parseInt(date.substring(20, 23));
+					System.out.println("milisecs");
+					milisecond = Integer.parseInt(date.substring(20, 24));
 
 				case 0:
+					
 
-					year = Integer.parseInt(date.substring(0, 3));
-					month = Integer.parseInt(date.substring(5, 6));
-					day = Integer.parseInt(date.substring(8, 9));
-					hour = Integer.parseInt(date.substring(11, 12));
-					minute = Integer.parseInt(date.substring(14, 15));
-					second = Integer.parseInt(date.substring(17, 18));
+					year = Integer.parseInt(date.substring(0, 4));
+					month = Integer.parseInt(date.substring(5, 7));
+					day = Integer.parseInt(date.substring(8, 10));
+					hour = Integer.parseInt(date.substring(11, 13));
+					minute = Integer.parseInt(date.substring(14, 16));
+					second = Integer.parseInt(date.substring(17, 19));
+					System.out.println(date+" "+year+" "+day+" "+milisecond);
 
 					break;
 
 				case 3:
 
-					milisecond = Integer.parseInt(date.substring(20, 23));
+					milisecond = Integer.parseInt(date.substring(20, 24));
 
 				case 2:
 
-					day = Integer.parseInt(date.substring(0, 1));
-					month = Integer.parseInt(date.substring(3, 4));
-					year = Integer.parseInt(date.substring(6, 9));
-					hour = Integer.parseInt(date.substring(11, 12));
-					minute = Integer.parseInt(date.substring(14, 15));
-					second = Integer.parseInt(date.substring(17, 18));
+					day = Integer.parseInt(date.substring(0, 2));
+					month = Integer.parseInt(date.substring(3, 5));
+					year = Integer.parseInt(date.substring(6, 10));
+					hour = Integer.parseInt(date.substring(11, 13));
+					minute = Integer.parseInt(date.substring(14, 16));
+					second = Integer.parseInt(date.substring(17, 19));
 
 					break;
 
@@ -191,9 +197,13 @@ public class DateManipulator {
 
 				}
 
-				break;
+				found = true;
 			}
-			id++;
+			
+			if (found)
+				break;
+			else
+				id++;
 
 		}
 		

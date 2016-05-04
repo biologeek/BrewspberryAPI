@@ -10,13 +10,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.pi4j.io.gpio.GpioController;
-import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.PinState;
-
 import net.brewspberry.adapter.RelayAdapter;
-import net.brewspberry.batches.launchers.Batch;
 import net.brewspberry.business.IGenericDao;
 import net.brewspberry.business.IGenericService;
 import net.brewspberry.business.ISpecificActionerDao;
@@ -28,7 +22,6 @@ import net.brewspberry.business.exceptions.NotAppropriateStatusException;
 import net.brewspberry.dao.ActionerDaoImpl;
 import net.brewspberry.exceptions.DAOException;
 import net.brewspberry.exceptions.ServiceException;
-import net.brewspberry.util.ConfigLoader;
 import net.brewspberry.util.Constants;
 import net.brewspberry.util.LogManager;
 
@@ -45,12 +38,9 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 	IGenericDao<Actioner> actionerDao = new ActionerDaoImpl();
 	ISpecificActionerDao actionerSpecDao = new ActionerDaoImpl();
 
-	Batch temperatureBatch;
-	Thread recordTemperatureBatch;
 
 	String getTemperatureRunningGrep = "ps -ef | grep bchrectemp.py";
 
-	final GpioController gpioController = GpioFactory.getInstance();
 	RelayAdapter relayAdapter = RelayAdapter.getInstance();
 
 	public ActionerServiceImpl() {
@@ -318,127 +308,7 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 	@Override
 	@Deprecated
 	public Actioner stopAction(Actioner actioner) throws Exception {
-		if (actioner != null && actioner.getAct_id() != 0) {
-
-			if (ConfigLoader.getConfigByKey(Constants.CONFIG_PROPERTIES,
-					"param.batches.language").equals("java")) {
-
-				if (recordTemperatureBatch != null) {
-
-					if (recordTemperatureBatch.isAlive()) {
-
-						recordTemperatureBatch.interrupt();
-
-						this.stopActionInDatabase(actioner);
-
-						// Wait for it to end
-						recordTemperatureBatch.join();
-
-					} else {
-						logger.info("Thread is dead");
-
-					}
-
-				} else {
-					logger.severe("Thread is null !!");
-				}
-
-			} else if (ConfigLoader.getConfigByKey(Constants.CONFIG_PROPERTIES,
-					"param.batches.language").equals("python")) {
-				switch (actioner.getAct_type()) {
-
-				case "1":
-
-					// ds18b20
-
-					// First, checks if a process is currently running
-					Process proc = null;
-					try {
-						proc = Runtime.getRuntime().exec(
-								getTemperatureRunningGrep);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-
-					BufferedReader br = new BufferedReader(
-							new InputStreamReader(proc.getInputStream()));
-
-					String line = null;
-
-					int counter = 0;
-					while ((line = br.readLine()) != null) {
-
-						// Checks if it is really the running batch
-						if (line.matches(commandLineRegexp)) {
-
-							System.out.println("Matching process found !");
-
-							/*
-							 * Returns PID of program using bra_id, etape_id and
-							 * act_id So no way we kill the wrong process
-							 */
-							String pid = this
-									.getPIDFromPs("bchrectemp.py "
-											+ actioner.getAct_brassin()
-													.getBra_id()
-											+ " "
-											+ actioner.getAct_etape()
-													.getEtp_id())
-									+ " " + actioner.getAct_id();
-
-							if (pid != "") {
-
-								// Kills the process !
-								Runtime.getRuntime().exec(
-										"kill -SIGTERM " + pid);
-								counter++;
-							}
-
-							// records in DB
-
-							actioner = this.stopActionInDatabase(actioner);
-						}
-					}
-
-					break;
-
-				case "2":
-
-					// Relay
-
-					GpioPinDigitalOutput gpio = null;
-					if (actioner.getAct_raspi_pin() != null) {
-						gpio = gpioController
-								.provisionDigitalOutputPin(Constants.BREW_GPIO
-										.get(actioner.getAct_raspi_pin()));
-
-						if (gpio.getState().equals(PinState.HIGH)) {
-
-							relayAdapter.changePinState(gpio);
-
-							// Not recording relay actions as therre may be more
-							// than one
-							// actioner = this.stopActionInDatabase(actioner);
-						}
-
-					}
-					
-
-					relayAdapter.setShutdownOptionsandShutdown(gpioController,gpio , PinState.LOW, true);
-					break;
-
-				}
-
-			} else {
-
-				logger.severe("Actioner ID is null, can't stop null actioner !!");
-				throw new Exception();
-			}
-		} else {
-
-			logger.warning("Unknown language");
-
-		}
+		
 		return actioner;
 
 	}
@@ -496,18 +366,6 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 		return result;
 	}
 
-	/**
-	 * Joins threads
-	 * 
-	 * @throws InterruptedException
-	 */
-	public void joinThreads() throws InterruptedException {
-
-		if (recordTemperatureBatch != null) {
-			recordTemperatureBatch.join();
-		}
-
-	}
 
 	public String getCommandLineRegexp() {
 		return commandLineRegexp;
@@ -540,23 +398,7 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 	public void setActionerSpecDao(ISpecificActionerDao actionerSpecDao) {
 		this.actionerSpecDao = actionerSpecDao;
 	}
-
-	public Batch getTemperatureBatch() {
-		return temperatureBatch;
-	}
-
-	public void setTemperatureBatch(Batch temperatureBatch) {
-		this.temperatureBatch = temperatureBatch;
-	}
-
-	public Thread getRecordTemperatureBatch() {
-		return recordTemperatureBatch;
-	}
-
-	public void setRecordTemperatureBatch(Thread recordTemperatureBatch) {
-		this.recordTemperatureBatch = recordTemperatureBatch;
-	}
-
+	
 	public String getGetTemperatureRunningGrep() {
 		return getTemperatureRunningGrep;
 	}
@@ -577,7 +419,4 @@ public class ActionerServiceImpl implements IGenericService<Actioner>,
 		return logger;
 	}
 
-	public GpioController getGpioController() {
-		return gpioController;
-	}
 }
