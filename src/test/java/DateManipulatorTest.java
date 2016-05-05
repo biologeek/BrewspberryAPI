@@ -20,29 +20,20 @@ public class DateManipulatorTest {
 		String date3 = "10/02/2014 15:40:50";
 		String date4 = "12/01/2014 13:32:59.1234";
 		
-		Date resDate1 = DateManipulator.formatDateFromVariousPatterns(date1);
-		Calendar cal  = Calendar.getInstance();
+		Calendar resDate1 = DateManipulator.formatDateFromVariousPatterns(date1);
 		
 		
-		Date resDate2 = DateManipulator.formatDateFromVariousPatterns(date2);
-		Date resDate3 = DateManipulator.formatDateFromVariousPatterns(date3);
-		Date resDate4 = DateManipulator.formatDateFromVariousPatterns(date4);
+		Calendar resDate2 = DateManipulator.formatDateFromVariousPatterns(date2);
+		Calendar resDate3 = DateManipulator.formatDateFromVariousPatterns(date3);
+		Calendar resDate4 = DateManipulator.formatDateFromVariousPatterns(date4);
 		
-		cal.setTime(resDate1);
+		Assert.assertEquals(resDate1.get(Calendar.DAY_OF_MONTH), 28);
 
+		Assert.assertEquals(resDate2.get(Calendar.SECOND), 33);
 		
-		Assert.assertEquals(cal.get(Calendar.DAY_OF_MONTH), 28);
-
-		cal.setTime(resDate2);
-		Assert.assertEquals(cal.get(Calendar.MILLISECOND), 2000);
+		Assert.assertEquals(resDate3.get(Calendar.DAY_OF_MONTH), 10);
 		
-
-		cal.setTime(resDate3);
-		Assert.assertEquals(cal.get(Calendar.DAY_OF_MONTH), 10);
-		
-
-		cal.setTime(resDate4);
-		Assert.assertEquals(cal.get(Calendar.SECOND), 59);
+		Assert.assertEquals(resDate4.get(Calendar.SECOND), 59);
 
 	}
 	

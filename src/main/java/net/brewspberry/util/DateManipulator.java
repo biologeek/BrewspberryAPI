@@ -125,9 +125,8 @@ public class DateManipulator {
 
 	}
 
-	public static Date formatDateFromVariousPatterns(String date) {
+	public static Calendar formatDateFromVariousPatterns(String date) {
 
-		Date result = new Date();
 		int id = 0;
 
 		int year = 0;
@@ -209,7 +208,6 @@ public class DateManipulator {
 		
 		Calendar cal = Calendar.getInstance();
 		
-		cal.setTime(result);
 		cal.set(Calendar.YEAR, year);
 		cal.set(Calendar.MONTH, month);
 		cal.set(Calendar.DAY_OF_MONTH, day);
@@ -219,6 +217,6 @@ public class DateManipulator {
 		cal.set(Calendar.MILLISECOND, milisecond);
 
 		
-		return cal.getTime();
+		return cal;
 	}
 }
