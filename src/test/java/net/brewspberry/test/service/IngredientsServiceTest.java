@@ -118,7 +118,7 @@ public class IngredientsServiceTest {
 		
 	}
 	
-	@Test
+	//@Test
 	public void shouldReturnIngredientFromHopArrayId() throws NoSuchMethodException, SecurityException {
 
 		PowerMockito.mockStatic(LogManager.class);

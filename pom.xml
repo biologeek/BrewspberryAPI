@@ -7,6 +7,12 @@
 	<name>brewspberry-core</name>
 	<description>Core of BrewspberryPi project</description>
 
+	<parent>
+		<groupId>net.brewspberry</groupId>
+		<artifactId>brewspberry-rpm-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../brewspberry-rpm-parent</relativePath>
+	</parent>
 	<dependencies>
 		<dependency>
 			<groupId>org.hibernate</groupId>
