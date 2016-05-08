@@ -360,7 +360,7 @@ public class TemperatureMeasurementServiceImpl implements
 		
 		List<TemperatureMeasurement> result = tmesSpecDao.getTemperatureMeasurementsAfterID(etape, uuid, tmesID, modulo);
 		
-		logger.info("Retrieved "+result.size()+" results");
+		logger.fine("Retrieved "+result.size()+" results");
 		
 		return result;
 	}

@@ -1,10 +1,9 @@
+package net.brewspberry.test;
 
 import java.util.Calendar;
-import java.util.Date;
-
 import org.junit.Test;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import net.brewspberry.util.DateManipulator;
 
 
@@ -16,9 +15,9 @@ public class DateManipulatorTest {
 	public void shouldFormatDateFromVariousPatterns(){
 		
 		String date1 = "2016-04-28 17:00:00";
-		String date2 = "2015-03-20 16:25:33.2000";
+		String date2 = "2015-03-20 16:25:31.2000";
 		String date3 = "10/02/2014 15:40:50";
-		String date4 = "12/01/2014 13:32:59.1234";
+		String date4 = "12/01/2014 13:32:57.1234";
 		
 		Calendar resDate1 = DateManipulator.formatDateFromVariousPatterns(date1);
 		
@@ -31,9 +30,9 @@ public class DateManipulatorTest {
 
 		Assert.assertEquals(resDate2.get(Calendar.SECOND), 33);
 		
-		Assert.assertEquals(resDate3.get(Calendar.DAY_OF_MONTH), 10);
+		Assert.assertEquals(resDate3.get(Calendar.SECOND), 50);
 		
-		Assert.assertEquals(resDate4.get(Calendar.SECOND), 59);
+		Assert.assertEquals(resDate4.get(Calendar.SECOND), 58);
 
 	}
 	

@@ -35,7 +35,7 @@ public class ActionerDaoImpl implements IGenericDao<Actioner>,
 		Long actID;
 
 		try {
-			logger.info("Saving Actioner with uuid " + arg0.getAct_uuid());
+			logger.fine("Saving Actioner with uuid " + arg0.getAct_uuid());
 			actID = (Long) session.save(arg0);
 
 			tx.commit();
@@ -45,7 +45,7 @@ public class ActionerDaoImpl implements IGenericDao<Actioner>,
 		} finally {
 			HibernateUtil.closeSession();
 		}
-		logger.info("save returned id : " + actID + " " + arg0.getAct_id());
+		logger.info("save returned id : " + actID + " " + arg0.getAct_id()+" with uuid " + arg0.getAct_uuid());
 		return arg0;
 	}
 
@@ -156,11 +156,7 @@ public class ActionerDaoImpl implements IGenericDao<Actioner>,
 		Actioner result;
 		List<Actioner> listResult;
 
-		logger.info("DAO from Actioner WHERE act_brassin = "
-				 			+ actioner.getAct_brassin().getBra_id() + " AND act_etape = "
-				 			+ actioner.getAct_etape().getEtp_id() + " AND act_type = '"
-				 			+ actioner.getAct_type() + "' AND act_uuid = '"
-				 			+ actioner.getAct_uuid()+"' order by act_id");
+		
 		
 		String hqlReq = "from Actioner WHERE act_brassin = "
 				 			+ actioner.getAct_brassin().getBra_id() + " AND act_etape = "

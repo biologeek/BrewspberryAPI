@@ -1,3 +1,4 @@
+package net.brewspberry.test;
 import static org.junit.Assert.*;
 import junit.framework.Assert;
 import net.brewspberry.util.Constants;

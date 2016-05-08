@@ -166,7 +166,7 @@ public class TemperatureMeasurementDaoImpl implements
 
 			result = this.getElementById(id);
 
-			logger.info("Saved TemperatureMeasurement with id " + id);
+			logger.fine("Saved TemperatureMeasurement with id " + id);
 
 		} catch (HibernateException e) {
 
@@ -289,7 +289,7 @@ public class TemperatureMeasurementDaoImpl implements
 			Etape etape, String uuid, long tmesID, int modulo) {
 
 		List<TemperatureMeasurement> result = new ArrayList<TemperatureMeasurement>();
-		logger.info("Restrictions : " + etape.getEtp_id() + " uuid : " + uuid
+		logger.fine("Restrictions : " + etape.getEtp_id() + " uuid : " + uuid
 				+ " ID : " + tmesID);
 		Criteria query;
 
@@ -311,7 +311,7 @@ public class TemperatureMeasurementDaoImpl implements
 								+ modulo + " = 0"));
 
 				if (uuid != null && !uuid.equals("all")) {
-					logger.info("added UUID restriction");
+
 					query.add(Restrictions.eq("tmes_probeUI", uuid));
 
 				}
